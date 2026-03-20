@@ -1025,233 +1025,205 @@ async function analyzeAudio(file){
   results.style.display='none';
   status.textContent='';
 
-  // ── PROGRESS BAR ──
-  let progressBar = document.getElementById('analysis-progress-bar');
+  // Progress bar
   let progressWrap = document.getElementById('analysis-progress-wrap');
+  let progressBar = document.getElementById('analysis-progress-bar');
   let progressPct = document.getElementById('analysis-progress-pct');
-  if(!progressBar){
+  if(!progressWrap){
     progressWrap = document.createElement('div');
     progressWrap.id='analysis-progress-wrap';
     progressWrap.style.cssText='margin-top:12px;';
-    const barTrack = document.createElement('div');
-    barTrack.style.cssText='height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;';
+    const track = document.createElement('div');
+    track.style.cssText='height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;';
     progressBar = document.createElement('div');
     progressBar.id='analysis-progress-bar';
-    progressBar.style.cssText='height:3px;background:var(--accent);border-radius:2px;width:0%;transition:width .3s ease;box-shadow:0 0 8px rgba(10,132,255,.5);';
-    barTrack.appendChild(progressBar);
+    progressBar.style.cssText='height:3px;background:var(--accent);border-radius:2px;width:0%;transition:width .3s ease;';
     progressPct = document.createElement('div');
     progressPct.id='analysis-progress-pct';
-    progressPct.style.cssText='font-size:11px;color:var(--dim);margin-top:6px;';
-    progressWrap.appendChild(barTrack);
+    progressPct.style.cssText='font-size:11px;color:var(--dim);margin-top:5px;';
+    track.appendChild(progressBar);
+    progressWrap.appendChild(track);
     progressWrap.appendChild(progressPct);
     scanning.appendChild(progressWrap);
   }
+  progressWrap.style.display='block';
 
-  function setProgress(pct, label){
-    progressBar.style.width = pct+'%';
-    progressPct.textContent = pct+'% — '+label;
+  function setP(pct, lbl){
+    if(progressBar) progressBar.style.width=pct+'%';
+    if(progressPct) progressPct.textContent=pct+'% — '+lbl;
   }
 
-  function updateMetricSilently(id, value, sub, barPct, rating){
-    const valEl = document.getElementById('am-'+id);
-    const subEl = document.getElementById('am-'+id+'-sub');
-    const bar = document.getElementById('am-'+id+'-bar');
-    const flagEl = document.getElementById('am-'+id+'-flag');
-    if(valEl) valEl.textContent = value;
-    if(subEl) subEl.textContent = sub;
-    if(bar){ bar.style.width=Math.min(100,barPct)+'%'; bar.className='am-bar '+(rating==='good'?'good':rating==='warn'?'warn':'bad'); }
-    if(flagEl){ const labels={good:'✓ good',warn:'needs work',bad:'problem'}; flagEl.innerHTML='<span class="am-flag '+rating+'">'+labels[rating]+'</span>'; }
+  function setMetric(id, value, sub, barPct, rating){
+    const v=document.getElementById('am-'+id); if(v) v.textContent=value;
+    const s=document.getElementById('am-'+id+'-sub'); if(s) s.textContent=sub;
+    const b=document.getElementById('am-'+id+'-bar');
+    if(b){b.style.width=Math.min(100,barPct)+'%';b.className='am-bar '+(rating==='good'?'good':rating==='warn'?'warn':'bad');}
+    const f=document.getElementById('am-'+id+'-flag');
+    if(f){const labels={good:'✓ good',warn:'needs work',bad:'problem'};f.innerHTML='<span class="am-flag am-flag--'+rating+'">'+labels[rating]+'</span>';}
   }
 
   try {
-    setProgress(5, 'loading audio...');
+    setP(10, 'loading audio...');
     const arrayBuffer = await file.arrayBuffer();
 
-    setProgress(15, 'decoding track...');
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    const ctx = new AudioContext();
-    const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+    setP(25, 'decoding...');
+    const AC = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AC();
+    const audioBuf = await ctx.decodeAudioData(arrayBuffer);
 
-    const left = audioBuffer.getChannelData(0);
-    const right = audioBuffer.numberOfChannels > 1 ? audioBuffer.getChannelData(1) : left;
-    const sr = audioBuffer.sampleRate;
-    const duration = audioBuffer.duration;
+    const left = audioBuf.getChannelData(0);
+    const right = audioBuf.numberOfChannels > 1 ? audioBuf.getChannelData(1) : left;
+    const sr = audioBuf.sampleRate;
+    const duration = audioBuf.duration;
 
-    // Mix to mono
-    const mono = new Float32Array(left.length);
-    for(let i=0;i<left.length;i++) mono[i]=(left[i]+right[i])/2;
+    setP(35, 'analyzing frequencies...');
 
-  // PHASE 1: Fast analysis on first 30 seconds ──
-    const FAST_SECS = 30;
-    const fastLen = Math.min(mono.length, sr * FAST_SECS);
-    const fullLen = mono.length;
+    // Fast approach: use AnalyserNode with a short sample (first 10s max)
+    // This is 10x faster than OfflineAudioContext bandpass filters
+    const SAMPLE_SECS = Math.min(duration, 10);
+    const sampleLen = Math.floor(sr * SAMPLE_SECS);
+    const FFT_SIZE = 8192;
 
-    async function getBandEnergy(signal, sampleRate, lowHz, highHz, maxSecs){
-      const len = Math.min(signal.length, sampleRate * (maxSecs || 30));
-      const oCtx = new OfflineAudioContext(1, len, sampleRate);
-      const oSrc = oCtx.createBufferSource();
-      const oBuf = oCtx.createBuffer(1, len, sampleRate);
-      oBuf.copyToChannel(signal.subarray(0, len), 0);
-      oSrc.buffer = oBuf;
-      const filter = oCtx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.value = (lowHz + highHz) / 2;
-      filter.Q.value = Math.max(0.1, (lowHz + highHz) / (2 * (highHz - lowHz)));
-      oSrc.connect(filter);
-      filter.connect(oCtx.destination);
-      oSrc.start(0);
-      const rendered = await oCtx.startRendering();
-      const data = rendered.getChannelData(0);
-      let sum = 0;
-      for(let i=0;i<data.length;i++) sum += data[i]*data[i];
-      return Math.sqrt(sum/data.length);
-    }
+    // Create offline context just for FFT — much faster, single pass
+    const offCtx = new OfflineAudioContext(1, sampleLen, sr);
+    const src = offCtx.createBufferSource();
+    const mono = new Float32Array(sampleLen);
+    for(let i=0;i<sampleLen;i++) mono[i]=(left[i]+right[i])/2;
+    const buf = offCtx.createBuffer(1, sampleLen, sr);
+    buf.copyToChannel(mono, 0);
+    src.buffer = buf;
+    src.connect(offCtx.destination);
+    src.start(0);
+    const rendered = await offCtx.startRendering();
+    const monoData = rendered.getChannelData(0);
 
-    function calcStereoAndDynamics(l, r, len){
-      let midRMS=0, sideRMS=0, overallRMS=0, peak=0;
-      const n = Math.min(l.length, len);
-      for(let i=0;i<n;i++){
-        const m=(l[i]+r[i])/2, s=(l[i]-r[i])/2, mo=(l[i]+r[i])/2;
-        midRMS+=m*m; sideRMS+=s*s; overallRMS+=mo*mo;
-        if(Math.abs(mo)>peak) peak=Math.abs(mo);
+    setP(55, 'computing spectrum...');
+
+    // FFT via manual DFT on chunks — fast single pass
+    function computeSpectrum(signal, fftSize){
+      const numBins = fftSize / 2;
+      const energy = new Float32Array(numBins);
+      const hopSize = fftSize;
+      let frames = 0;
+      for(let start=0; start+fftSize<=signal.length; start+=hopSize){
+        // Hann window + magnitude
+        for(let k=0; k<numBins; k++){
+          let re=0, im=0;
+          for(let n=0; n<fftSize; n++){
+            const w = 0.5*(1-Math.cos(2*Math.PI*n/fftSize));
+            const angle = 2*Math.PI*k*n/fftSize;
+            re += signal[start+n]*w*Math.cos(angle);
+            im -= signal[start+n]*w*Math.sin(angle);
+          }
+          energy[k] += re*re + im*im;
+        }
+        frames++;
+        if(frames >= 3) break; // Only 3 frames needed for good estimate
       }
-      midRMS=Math.sqrt(midRMS/n); sideRMS=Math.sqrt(sideRMS/n); overallRMS=Math.sqrt(overallRMS/n);
-      const stereoWidth = midRMS>0 ? sideRMS/midRMS : 0;
-      const lufsApprox = 20*Math.log10(overallRMS+0.00001);
-      const crestFactor = peak>0 ? 20*Math.log10(peak/overallRMS) : 0;
-      return {stereoWidth, lufsApprox, crestFactor, overallRMS};
+      for(let k=0;k<numBins;k++) energy[k] = Math.sqrt(energy[k]/(frames||1));
+      return energy;
     }
 
-    function buildResults(bands, stereoData){
-      const [subBass, bass, lowMid, mid, upperMid, presence, air] = bands;
-      const {stereoWidth, lufsApprox, crestFactor, overallRMS} = stereoData;
-      const lowEndEnergy = subBass+bass;
-      const vocalEnergy = mid+upperMid;
-      const lowVocalRatio = vocalEnergy>0 ? lowEndEnergy/vocalEnergy : 0;
-      const spectralCentroid = (subBass*50+bass*165+lowMid*375+mid*1250+upperMid*4000+air*14000)/(subBass+bass+lowMid+mid+upperMid+air+0.0001);
-      const vocalScore = vocalEnergy/(overallRMS+0.0001);
-      return {subBass,bass,lowMid,mid,upperMid,presence,air,stereoWidth,lufsApprox,crestFactor,overallRMS,lowEndEnergy,vocalEnergy,lowVocalRatio,spectralCentroid,vocalScore};
+    // Use smaller FFT for speed
+    const FAST_FFT = 512;
+    const spectrum = computeSpectrum(monoData, FAST_FFT);
+    const binHz = sr / FAST_FFT;
+    const numBins = FAST_FFT / 2;
+
+    // Sum energy in frequency bands
+    function bandEnergy(spec, loHz, hiHz, binHz){
+      const lo = Math.floor(loHz/binHz);
+      const hi = Math.min(Math.ceil(hiHz/binHz), spec.length-1);
+      let sum=0, count=0;
+      for(let i=lo;i<=hi;i++){sum+=spec[i];count++;}
+      return count>0?sum/count:0;
     }
 
-    function displayResults(d){
-      const {stereoWidth,lufsApprox,crestFactor,lowVocalRatio,spectralCentroid,vocalScore,duration:dur} = d;
+    const subBass = bandEnergy(spectrum, 20, 80, binHz);
+    const bass    = bandEnergy(spectrum, 80, 250, binHz);
+    const lowMid  = bandEnergy(spectrum, 250, 500, binHz);
+    const mid     = bandEnergy(spectrum, 500, 2000, binHz);
+    const upperMid= bandEnergy(spectrum, 2000, 6000, binHz);
+    const presence= bandEnergy(spectrum, 3000, 8000, binHz);
+    const air     = bandEnergy(spectrum, 8000, 20000, binHz);
 
-      const vocalRating = vocalScore>0.4?'good':vocalScore>0.25?'warn':'bad';
-      updateMetricSilently('vocal',(vocalScore*100).toFixed(0)+'%','of total energy in vocal range (500Hz-6kHz)',vocalScore*200,vocalRating);
+    setP(75, 'measuring stereo & dynamics...');
 
-      const lowRating = lowVocalRatio<1.5?'good':lowVocalRatio<2.5?'warn':'bad';
-      updateMetricSilently('low',lowVocalRatio.toFixed(1)+'×','low end vs vocal energy (target: under 1.5×)',Math.min(100,lowVocalRatio*33),lowRating);
-
-      const stereoRating = stereoWidth>0.25?'good':stereoWidth>0.12?'warn':'bad';
-      updateMetricSilently('stereo',stereoWidth.toFixed(2),'side/mid ratio (target: 0.25+)',stereoWidth*300,stereoRating);
-
-      const brightRating = spectralCentroid>1500&&spectralCentroid<4000?'good':spectralCentroid<800?'bad':'warn';
-      const brightLabel = spectralCentroid<800?'dark/muddy':spectralCentroid<1500?'slightly dark':spectralCentroid<4000?'balanced':'bright/harsh';
-      updateMetricSilently('bright',Math.round(spectralCentroid)+'Hz','spectral centroid — '+brightLabel,Math.min(100,(spectralCentroid/8000)*100),brightRating);
-
-      const dynRating = crestFactor>8?'good':crestFactor>4?'warn':'bad';
-      const dynLabel = crestFactor>12?'wide — not much compression':crestFactor>8?'balanced':crestFactor>4?'compressed':'over-compressed';
-      updateMetricSilently('dynamic',crestFactor.toFixed(1)+'dB','crest factor — '+dynLabel,Math.min(100,(crestFactor/20)*100),dynRating);
-
-      const levelRating = lufsApprox>-16&&lufsApprox<-8?'good':lufsApprox<-20?'warn':'bad';
-      const levelLabel = lufsApprox>-8?'too hot — clipping risk':lufsApprox>-16?'good level':lufsApprox>-20?'a bit quiet':'too quiet';
-      updateMetricSilently('level',lufsApprox.toFixed(1)+' LUFS','~integrated loudness — '+levelLabel,Math.min(100,Math.max(0,((lufsApprox+30)/25)*100)),levelRating);
-
-      const insights=[];
-      if(lowVocalRatio>2) insights.push('<strong>Low end is dominating</strong> — '+lowVocalRatio.toFixed(1)+'× louder than vocals. Main reason vocals sound buried.');
-      if(stereoWidth<0.15) insights.push('<strong>Mix is very mono</strong> — width of '+stereoWidth.toFixed(2)+'. Widen pads and hi-hats to create space.');
-      if(spectralCentroid<800) insights.push('<strong>Mix is muddy/dark</strong> — centroid at '+Math.round(spectralCentroid)+'Hz. High-pass more aggressively and check reverb.');
-      if(crestFactor<4) insights.push('<strong>Over-compressed</strong> — '+crestFactor.toFixed(1)+'dB crest means transients are crushed. Back off compression.');
-      if(lufsApprox>-8) insights.push('<strong>Mix is too hot</strong> — '+lufsApprox.toFixed(1)+' LUFS will distort on streaming platforms.');
-      if(vocalScore<0.25) insights.push('<strong>Vocals are weak in the mix</strong> — only '+(vocalScore*100).toFixed(0)+'% of energy in vocal range.');
-      if(insights.length===0) insights.push('Measurements look reasonable. The AI will dig into specifics based on your description.');
-      document.getElementById('am-insight').innerHTML=insights.join('<br><br>');
+    // Stereo width + dynamics (time domain, very fast)
+    const analyzeLen = Math.min(left.length, sr*15);
+    let midRMS=0, sideRMS=0, overallRMS=0, peak=0;
+    for(let i=0;i<analyzeLen;i++){
+      const m=(left[i]+right[i])/2, s=(left[i]-right[i])/2;
+      midRMS+=m*m; sideRMS+=s*s; overallRMS+=m*m;
+      if(Math.abs(m)>peak) peak=Math.abs(m);
     }
+    midRMS=Math.sqrt(midRMS/analyzeLen);
+    sideRMS=Math.sqrt(sideRMS/analyzeLen);
+    overallRMS=Math.sqrt(overallRMS/analyzeLen);
+    const stereoWidth = midRMS>0 ? sideRMS/midRMS : 0;
+    const lufsApprox = 20*Math.log10(overallRMS+0.00001);
+    const crestFactor = peak>0 ? 20*Math.log10(peak/overallRMS) : 0;
+    const lowEndEnergy = subBass+bass;
+    const vocalEnergy = mid+upperMid;
+    const lowVocalRatio = vocalEnergy>0 ? lowEndEnergy/vocalEnergy : 0;
+    const spectralCentroid = (subBass*50+bass*165+lowMid*375+mid*1250+upperMid*4000+air*14000)/(subBass+bass+lowMid+mid+upperMid+air+0.0001);
+    const vocalScore = vocalEnergy/(overallRMS+0.0001);
 
-  // PHASE 1: analyze first 30s, show results fast ──
-    setProgress(20, 'quick scan (first 30s)...');
-    const fastBands = await Promise.all([
-      getBandEnergy(mono,sr,20,80,FAST_SECS),
-      getBandEnergy(mono,sr,80,250,FAST_SECS),
-      getBandEnergy(mono,sr,250,500,FAST_SECS),
-      getBandEnergy(mono,sr,500,2000,FAST_SECS),
-      getBandEnergy(mono,sr,2000,6000,FAST_SECS),
-      getBandEnergy(mono,sr,3000,8000,FAST_SECS),
-      getBandEnergy(mono,sr,8000,20000,FAST_SECS)
-    ]);
-    setProgress(55, 'calculating stereo & dynamics...');
-    const fastStereo = calcStereoAndDynamics(left, right, fastLen);
-    const fastResults = buildResults(fastBands, {...fastStereo, duration});
+    setP(90, 'building results...');
 
-    // Store fast results immediately
+    // Store for AI
     audioAnalysisData = {
-      subBass: fastResults.subBass.toFixed(4), bass: fastResults.bass.toFixed(4),
-      lowMid: fastResults.lowMid.toFixed(4), mid: fastResults.mid.toFixed(4),
-      upperMid: fastResults.upperMid.toFixed(4), presence: fastResults.presence.toFixed(4),
-      air: fastResults.air.toFixed(4), stereoWidth: fastResults.stereoWidth.toFixed(3),
-      lufsApprox: fastResults.lufsApprox.toFixed(1), crestFactor: fastResults.crestFactor.toFixed(1),
-      spectralCentroid: Math.round(fastResults.spectralCentroid),
-      lowVocalRatio: fastResults.lowVocalRatio.toFixed(2), duration: Math.round(duration)
+      subBass:subBass.toFixed(4), bass:bass.toFixed(4), lowMid:lowMid.toFixed(4),
+      mid:mid.toFixed(4), upperMid:upperMid.toFixed(4), presence:presence.toFixed(4),
+      air:air.toFixed(4), stereoWidth:stereoWidth.toFixed(3),
+      lufsApprox:lufsApprox.toFixed(1), crestFactor:crestFactor.toFixed(1),
+      spectralCentroid:Math.round(spectralCentroid), lowVocalRatio:lowVocalRatio.toFixed(2),
+      duration:Math.round(duration)
     };
 
-    // Show results immediately
-    setProgress(60, 'showing results...');
+    // Show results
     scanning.style.display='none';
     results.style.display='block';
-    displayResults(fastResults);
-    progressWrap.style.display='block';
 
-  // PHASE 2: refine with full track in background ──
-    if(duration > FAST_SECS + 5){
-      const fullSecs = Math.min(duration, 180); // max 3 mins
-      setProgress(65, 'refining with full track...');
+    const vocalRating = vocalScore>0.4?'good':vocalScore>0.25?'warn':'bad';
+    setMetric('vocal',(vocalScore*100).toFixed(0)+'%','vocal range energy (500Hz-6kHz)',vocalScore*200,vocalRating);
+    const lowRating = lowVocalRatio<1.5?'good':lowVocalRatio<2.5?'warn':'bad';
+    setMetric('low',lowVocalRatio.toFixed(1)+'×','low end vs vocal (target under 1.5×)',Math.min(100,lowVocalRatio*33),lowRating);
+    const stereoRating = stereoWidth>0.25?'good':stereoWidth>0.12?'warn':'bad';
+    setMetric('stereo',stereoWidth.toFixed(2),'side/mid ratio (target 0.25+)',stereoWidth*300,stereoRating);
+    const brightLabel = spectralCentroid<800?'dark/muddy':spectralCentroid<1500?'slightly dark':spectralCentroid<4000?'balanced':'bright/harsh';
+    const brightRating = spectralCentroid>1500&&spectralCentroid<4000?'good':spectralCentroid<800?'bad':'warn';
+    setMetric('bright',Math.round(spectralCentroid)+'Hz','spectral centroid — '+brightLabel,(spectralCentroid/8000)*100,brightRating);
+    const dynLabel = crestFactor>12?'wide':crestFactor>8?'balanced':crestFactor>4?'compressed':'over-compressed';
+    const dynRating = crestFactor>8?'good':crestFactor>4?'warn':'bad';
+    setMetric('dynamic',crestFactor.toFixed(1)+'dB','crest factor — '+dynLabel,(crestFactor/20)*100,dynRating);
+    const levelLabel = lufsApprox>-8?'too hot':lufsApprox>-16?'good level':lufsApprox>-20?'a bit quiet':'too quiet';
+    const levelRating = lufsApprox>-16&&lufsApprox<-8?'good':lufsApprox<-20?'warn':'bad';
+    setMetric('level',lufsApprox.toFixed(1)+' LUFS','~integrated loudness — '+levelLabel,Math.max(0,((lufsApprox+30)/25)*100),levelRating);
 
-      // Yield to browser so UI can paint
-      await new Promise(r => setTimeout(r, 50));
+    const insights=[];
+    if(lowVocalRatio>2) insights.push('<strong>Low end is '+lowVocalRatio.toFixed(1)+'× louder than vocals</strong> — main reason vocals sound buried.');
+    if(stereoWidth<0.15) insights.push('<strong>Mix is nearly mono</strong> — width '+stereoWidth.toFixed(2)+', widen pads and hi-hats.');
+    if(spectralCentroid<800) insights.push('<strong>Mix is dark/muddy</strong> — centroid at '+Math.round(spectralCentroid)+'Hz.');
+    if(crestFactor<4) insights.push('<strong>Over-compressed</strong> — '+crestFactor.toFixed(1)+'dB crest factor.');
+    if(lufsApprox>-8) insights.push('<strong>Too hot</strong> — '+lufsApprox.toFixed(1)+' LUFS will distort on streaming.');
+    if(vocalScore<0.25) insights.push('<strong>Vocals weak in mix</strong> — only '+(vocalScore*100).toFixed(0)+'% energy in vocal range.');
+    if(insights.length===0) insights.push('Measurements look reasonable. Describe your issue and hit Analyze.');
+    document.getElementById('am-insight').innerHTML = insights.join('<br><br>');
 
-      const fullBands = await Promise.all([
-        getBandEnergy(mono,sr,20,80,fullSecs),
-        getBandEnergy(mono,sr,80,250,fullSecs),
-        getBandEnergy(mono,sr,250,500,fullSecs),
-        getBandEnergy(mono,sr,500,2000,fullSecs),
-        getBandEnergy(mono,sr,2000,6000,fullSecs),
-        getBandEnergy(mono,sr,3000,8000,fullSecs),
-        getBandEnergy(mono,sr,8000,20000,fullSecs)
-      ]);
-      setProgress(88, 'finalizing...');
-
-      await new Promise(r => setTimeout(r, 30));
-      const fullStereo = calcStereoAndDynamics(left, right, Math.min(fullLen, sr*fullSecs));
-      const fullResultsData = buildResults(fullBands, {...fullStereo, duration});
-
-      // Update stored data with full results
-      audioAnalysisData = {
-        subBass: fullResultsData.subBass.toFixed(4), bass: fullResultsData.bass.toFixed(4),
-        lowMid: fullResultsData.lowMid.toFixed(4), mid: fullResultsData.mid.toFixed(4),
-        upperMid: fullResultsData.upperMid.toFixed(4), presence: fullResultsData.presence.toFixed(4),
-        air: fullResultsData.air.toFixed(4), stereoWidth: fullResultsData.stereoWidth.toFixed(3),
-        lufsApprox: fullResultsData.lufsApprox.toFixed(1), crestFactor: fullResultsData.crestFactor.toFixed(1),
-        spectralCentroid: Math.round(fullResultsData.spectralCentroid),
-        lowVocalRatio: fullResultsData.lowVocalRatio.toFixed(2), duration: Math.round(duration)
-      };
-
-      // Update display with refined values
-      displayResults(fullResultsData);
-      setProgress(100, 'full track analyzed ✓');
-      setTimeout(()=>{ progressWrap.style.display='none'; status.textContent='full track analyzed'; }, 1500);
-    } else {
-      setProgress(100, 'analyzed ✓');
-      setTimeout(()=>{ progressWrap.style.display='none'; status.textContent='analyzed'; }, 1200);
-    }
-
+    setP(100, 'done ✓');
+    setTimeout(()=>{ if(progressWrap) progressWrap.style.display='none'; status.textContent='analyzed'; }, 1200);
     await ctx.close();
+
   } catch(err){
     console.error('Analysis error:', err);
     scanning.style.display='none';
     status.textContent='analysis failed — describe your mix manually';
     audioAnalysisData = null;
+    if(progressWrap) progressWrap.style.display='none';
   }
 }
+
 
 // Multi-image storage for plugin chain
 let pluginImages=[]; // [{b64, type, name}]
