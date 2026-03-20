@@ -21,7 +21,7 @@
   --border2:rgba(255,255,255,0.13);
 }
 html{scroll-behavior:smooth;}
-body{background:var(--black);color:var(--white);font-family:'DM Sans',-apple-system,'Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none;}
+body{background:var(--black);color:var(--white);overflow-x:hidden;font-family:'DM Sans',-apple-system,'Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none;}
 
 /* CURSOR */
 #cur{position:fixed;z-index:9999;width:12px;height:12px;background:var(--accent);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);transition:width .25s ease,height .25s ease,background .25s ease;box-shadow:0 0 10px rgba(10,132,255,.6);}
@@ -899,18 +899,22 @@ const lbar = document.getElementById('lbar');
 const lls = [0,1,2,3,4,5,6,7,8].map(i => document.getElementById('l'+i));
 if(lls[0]) lls.forEach((l,i) => setTimeout(() => { if(l) l.classList.add('in'); }, 60 + i*55));
 const li = setInterval(() => {
-  prog += Math.random()*7+2;
-  if(prog >= 100){ prog=100; clearInterval(li); setTimeout(finishLoad, 400); }
-  lbar.style.width = prog+'%';
+  prog += 8;
+  if(prog >= 100){ prog=100; clearInterval(li); }
+  if(lbar) lbar.style.width = prog+'%';
 }, 80);
-// Hard timeout -- force finish after 3s no matter what
-setTimeout(() => { if(document.getElementById('loader').style.display !== 'none') finishLoad(); }, 3000);
+// Always finish after 1 second — no exceptions
+setTimeout(finishLoad, 1000);
 function finishLoad(){
   const ld = document.getElementById('loader');
   if(!ld || ld.style.display === 'none') return;
-  ld.style.transition = 'opacity .6s, transform .6s';
-  ld.style.opacity = '0'; ld.style.transform = 'translateY(-16px)';
-  setTimeout(() => { ld.style.display='none'; startHero(); }, 650);
+  ld.style.transition = 'opacity .4s';
+  ld.style.opacity = '0';
+  setTimeout(() => { 
+    ld.style.display='none'; 
+    document.body.style.overflow='auto';
+    startHero(); 
+  }, 420);
 }
 function startHero(){
   setTimeout(() => document.getElementById('heyebrow').classList.add('in'), 100);
