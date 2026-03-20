@@ -1400,16 +1400,28 @@ async function getFeedback(mode){
 
   try {
     const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),45000);
+    const timeout=setTimeout(()=>controller.abort(),30000);
+    fbTxt.innerHTML='<div class="loading"><div class="spinner"></div>Connecting to engineer...</div>';
     const res=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,system:sys,messages}),signal:controller.signal});
     clearTimeout(timeout);
+    if(!res.ok){
+      const errData=await res.json().catch(()=>({}));
+      fbTxt.textContent='API error '+res.status+': '+(errData.error?.message||errData.error||JSON.stringify(errData));
+      btn.disabled=false; return;
+    }
     const data=await res.json();
     const text=data.content?.map(b=>b.text||'').join('')||'No response received.';
     renderFeedback(text,fbTxt);
     currentFb[mode]=text;
     convHistory[mode].push({role:'assistant',content:text});
     document.getElementById('fu-'+mode).style.display='block';
-  } catch(err){ fbTxt.textContent='Something went wrong. Check your connection and try again.'; }
+  } catch(err){
+    if(err.name==='AbortError'){
+      fbTxt.textContent='Request timed out after 30 seconds. Check your internet connection and try again.';
+    } else {
+      fbTxt.textContent='Error: '+err.message+'. Make sure the site is deployed correctly on Vercel.';
+    }
+  }
   btn.disabled=false;
 }
 
