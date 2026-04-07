@@ -1270,6 +1270,7 @@ async function getFeedback(mode){
     const notes=document.getElementById('tnotes').value;
     const genre=document.getElementById('tgenre').value;
     const stage=document.getElementById('tstage').value;
+    const daw=document.getElementById('tdaw')?.value||'Logic Pro';
     // Build analysis data string if available
     const hasAnalysis = audioAnalysisData !== null;
     const analysisStr = hasAnalysis ? (
