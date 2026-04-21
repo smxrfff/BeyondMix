@@ -81,8 +81,8 @@
   #loader.fade { opacity:0; pointer-events:none; }
   .l-logo { font-size:2rem; font-weight:800; letter-spacing:.04em; margin-bottom:2rem; }
   .l-logo span { color:var(--bright); }
-  .l-bar-wrap { width:200px; height:1px; background:rgba(77,159,255,.15); }
-  .l-bar { height:100%; background:var(--bright); width:0; transition:width .3s; }
+  .l-bar-wrap { width:200px; max-width:60vw; height:1px; background:rgba(77,159,255,.15); overflow:hidden; }
+  .l-bar { height:100%; background:var(--bright); width:0; max-width:100%; transition:width .3s; }
   .l-text { font-family:'Space Mono',monospace; font-size:.62rem; letter-spacing:.2em; color:var(--dim); margin-top:1rem; }
   @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
 </style>
