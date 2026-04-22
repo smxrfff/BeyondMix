@@ -183,15 +183,31 @@ select option{background:#0a0a14;color:#fff;}
 .fb-btn:hover{background:rgba(10,132,255,.1);color:var(--white);border-color:rgba(10,132,255,.3);}
 
 /* FEEDBACK -- style 3, option 2 typography */
-.fb-list{display:flex;flex-direction:column;gap:10px;}
-.fb-item{display:flex;align-items:flex-start;gap:16px;background:rgba(255,255,255,.03);border:.5px solid rgba(255,255,255,.08);border-radius:12px;padding:20px 22px;}
-.fb-item-num{font-size:26px;font-weight:700;color:rgba(10,132,255,.25);letter-spacing:-1px;line-height:1;flex-shrink:0;width:36px;margin-top:2px;}
-.fb-item-body{}
-.fb-item-title{font-size:16px;font-weight:600;color:rgba(255,255,255,.92);margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;letter-spacing:-.2px;}
-.fb-item-desc{font-size:14px;color:rgba(255,255,255,.85);line-height:1.7;}
-.fb-bullet-list{display:flex;flex-direction:column;gap:9px;margin-top:2px;}
-.fb-bullet-row{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:rgba(255,255,255,.85);line-height:1.55;}
-.fb-bullet-dot{width:5px;height:5px;border-radius:50%;background:#0a84ff;flex-shrink:0;margin-top:7px;}
+.fb-list{display:flex;flex-direction:column;gap:24px;}
+.fb-section-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.fb-section-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);}
+.fb-section-pill{font-size:10px;font-weight:600;padding:2px 9px;border-radius:99px;}
+.fb-pill-high{background:rgba(255,69,58,.15);color:#ff453a;}
+.fb-pill-med{background:rgba(255,159,10,.15);color:#ff9f0a;}
+.fb-pill-low{background:rgba(48,209,88,.15);color:#30d158;}
+.fb-rows{display:flex;flex-direction:column;gap:6px;}
+.fb-row{border-radius:10px;overflow:hidden;border:.5px solid rgba(255,255,255,.07);}
+.fb-row-main{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.fb-row-problem{background:rgba(255,255,255,.03);padding:13px 16px;border-right:.5px solid rgba(255,255,255,.07);}
+.fb-row-fix{background:rgba(10,132,255,.05);padding:13px 16px;}
+.fb-col-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px;}
+.fb-col-label.problem{color:rgba(255,255,255,.35);}
+.fb-col-label.fix{color:rgba(10,132,255,.7);}
+.fb-col-text{font-size:13px;line-height:1.55;}
+.fb-col-text.problem{color:rgba(255,255,255,.7);}
+.fb-col-text.fix{color:rgba(255,255,255,.92);font-weight:500;}
+.fb-why-toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#0a84ff;cursor:pointer;padding:8px 16px;background:none;border:none;font-family:inherit;width:100%;text-align:left;border-top:.5px solid rgba(255,255,255,.08);}
+.fb-why-toggle:hover{color:#fff;}
+.fb-why-arrow{font-size:9px;transition:transform .2s;}
+.fb-why-arrow.open{transform:rotate(90deg);}
+.fb-row-why{display:none;padding:10px 16px;background:rgba(255,255,255,.02);border-top:.5px solid rgba(255,255,255,.05);}
+.fb-row-why.open{display:block;}
+.fb-why-text{font-size:12px;color:rgba(255,255,255,.5);line-height:1.6;}
 .fb-pill{display:inline-block;font-size:11px;font-weight:600;border-radius:99px;padding:3px 11px;vertical-align:middle;}
 .fb-pill-high{background:rgba(255,69,58,.15);color:#ff453a;}
 .fb-pill-med{background:rgba(255,159,10,.15);color:#ff9f0a;}
@@ -368,11 +384,11 @@ footer{border-top:.5px solid var(--border);padding:40px 48px;display:flex;justif
   .sub-btn{font-size:15px;padding:15px;}
 
   /* FEEDBACK CARDS */
-  .fb-item{padding:14px 14px;gap:12px;}
-  .fb-item-num{font-size:20px;width:26px;}
-  .fb-item-title{font-size:15px;}
-  .fb-item-desc{font-size:14px;}
-  .fb-bullet-row{font-size:14px;}
+
+
+
+
+
   .fb-pill{font-size:10px;padding:2px 8px;}
 
   /* CHAT */
@@ -1437,70 +1453,58 @@ async function getFeedback(mode){
 function renderFeedback(raw,el){
   el.innerHTML='';
   const list=document.createElement('div'); list.className='fb-list';
-
-  // Parse into sections
   const sections=[];
   let cur=null;
   raw.split('\n').forEach(line=>{
-    const t=line.trim();
-    if(!t) return;
-    // Detect ALL CAPS header with colon e.g. "ROOT ISSUES:"
+    const t=line.trim(); if(!t) return;
     const isHdr=/^[A-Z][A-Z\s&\/]{2,}:/.test(t)&&t.length<100;
-    if(isHdr){
-      if(cur) sections.push(cur);
-      cur={title:t.replace(/:.*$/,'').trim(), bullets:[]};
-    } else if(cur){
-      // Strip leading dash/hyphen/bullet
-      const clean=t.replace(/^[-•*]\s*/,'').trim();
-      if(clean) cur.bullets.push(clean);
-    } else {
-      // Content before first header
-      cur={title:null, bullets:[]};
-      const clean=t.replace(/^[-•*]\s*/,'').trim();
-      if(clean) cur.bullets.push(clean);
-    }
+    if(isHdr){ if(cur) sections.push(cur); cur={title:t.replace(/:.*$/,'').trim(),bullets:[]}; }
+    else if(cur){ const clean=t.replace(/^[-•*]\s*/,'').trim(); if(clean) cur.bullets.push(clean); }
+    else { cur={title:null,bullets:[]}; const clean=t.replace(/^[-•*]\s*/,'').trim(); if(clean) cur.bullets.push(clean); }
   });
   if(cur) sections.push(cur);
-
   const priorities=['urgent','urgent','important','after above','optional'];
   const pillClass=['fb-pill-high','fb-pill-high','fb-pill-med','fb-pill-low','fb-pill-low'];
-
   sections.forEach((sec,idx)=>{
-    const item=document.createElement('div'); item.className='fb-item';
-
-    // Number
-    const num=document.createElement('div'); num.className='fb-item-num';
-    num.textContent=String(idx+1).padStart(2,'0');
-
-    // Body
-    const body=document.createElement('div'); body.className='fb-item-body';
-
-    // Title + pill
-    const titleRow=document.createElement('div'); titleRow.className='fb-item-title';
-    const titleText=document.createElement('span');
-    titleText.textContent=sec.title||('Section '+(idx+1));
-    titleRow.appendChild(titleText);
-    if(idx<priorities.length){
-      const pill=document.createElement('span');
-      pill.className='fb-pill '+pillClass[idx];
-      pill.textContent=priorities[idx];
-      titleRow.appendChild(pill);
-    }
-    body.appendChild(titleRow);
-
-    // Bullets -- each on its own line with a dot
-    const bulletList=document.createElement('div'); bulletList.className='fb-bullet-list';
+    const block=document.createElement('div');
+    const hdr=document.createElement('div'); hdr.className='fb-section-header';
+    const hdrTitle=document.createElement('span'); hdrTitle.className='fb-section-title';
+    hdrTitle.textContent=sec.title||('Section '+(idx+1));
+    hdr.appendChild(hdrTitle);
+    if(idx<priorities.length){ const pill=document.createElement('span'); pill.className='fb-section-pill '+(pillClass[idx]||'fb-pill-low'); pill.textContent=priorities[idx]; hdr.appendChild(pill); }
+    block.appendChild(hdr);
+    const rows=document.createElement('div'); rows.className='fb-rows';
     sec.bullets.forEach(b=>{
-      const row=document.createElement('div'); row.className='fb-bullet-row';
-      const dot=document.createElement('div'); dot.className='fb-bullet-dot';
-      const txt=document.createElement('span'); txt.textContent=b;
-      row.appendChild(dot); row.appendChild(txt);
-      bulletList.appendChild(row);
+      const row=document.createElement('div'); row.className='fb-row';
+      let issue='',fix='',why='';
+      const parts=b.split(' -- ');
+      if(parts.length>=3){ issue=parts[0].trim(); fix=parts[1].trim(); why=parts.slice(2).join(' -- ').trim(); }
+      else if(parts.length===2){ issue=parts[0].trim(); fix=parts[1].trim(); }
+      else if(b.includes(': ')){ const ci=b.indexOf(': '); issue=b.slice(0,ci).trim(); fix=b.slice(ci+2).trim(); }
+      else { issue=b; fix=''; }
+      const mainRow=document.createElement('div'); mainRow.className='fb-row-main';
+      const issueCell=document.createElement('div'); issueCell.className='fb-row-problem';
+      const issueLabel=document.createElement('div'); issueLabel.className='fb-col-label problem'; issueLabel.textContent='Issue';
+      const issueText=document.createElement('div'); issueText.className='fb-col-text problem'; issueText.textContent=issue;
+      issueCell.appendChild(issueLabel); issueCell.appendChild(issueText);
+      const fixCell=document.createElement('div'); fixCell.className='fb-row-fix';
+      const fixLabel=document.createElement('div'); fixLabel.className='fb-col-label fix'; fixLabel.textContent='Fix';
+      const fixText=document.createElement('div'); fixText.className='fb-col-text fix'; fixText.textContent=fix||'—';
+      fixCell.appendChild(fixLabel); fixCell.appendChild(fixText);
+      mainRow.appendChild(issueCell); mainRow.appendChild(fixCell);
+      row.appendChild(mainRow);
+      const toggle=document.createElement('button'); toggle.className='fb-why-toggle';
+      const arrow=document.createElement('span'); arrow.className='fb-why-arrow'; arrow.textContent='▶';
+      toggle.appendChild(arrow); toggle.appendChild(document.createTextNode(' Why'));
+      const whyPanel=document.createElement('div'); whyPanel.className='fb-row-why';
+      const whyText=document.createElement('div'); whyText.className='fb-why-text'; whyText.textContent=why||'No additional explanation.';
+      whyPanel.appendChild(whyText);
+      toggle.onclick=()=>{ const open=whyPanel.classList.toggle('open'); arrow.classList.toggle('open',open); };
+      row.appendChild(toggle); row.appendChild(whyPanel);
+      rows.appendChild(row);
     });
-    body.appendChild(bulletList);
-
-    item.appendChild(num); item.appendChild(body);
-    list.appendChild(item);
+    block.appendChild(rows);
+    list.appendChild(block);
   });
   el.appendChild(list);
 }
