@@ -20,8 +20,8 @@
   --border:rgba(255,255,255,0.07);
   --border2:rgba(255,255,255,0.13);
 }
-html{scroll-behavior:smooth;}body{overflow-x:hidden;}
-body{background:var(--black);color:var(--white);overflow-x:hidden;font-family:'DM Sans',-apple-system,'Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'DM Sans',-apple-system,'Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none;}
 
 /* CURSOR */
 #cur{position:fixed;z-index:9999;width:12px;height:12px;background:var(--accent);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);transition:width .25s ease,height .25s ease,background .25s ease;box-shadow:0 0 10px rgba(10,132,255,.6);}
@@ -31,8 +31,7 @@ body{background:var(--black);color:var(--white);overflow-x:hidden;font-family:'D
 .noise{position:fixed;inset:0;z-index:500;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px;}
 
 /* LOADER */
-#loader{position:fixed;inset:0;z-index:1000;background:var(--black);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:36px;animation:loaderHide .4s ease 1.4s forwards;}
-@keyframes loaderHide{0%{opacity:1;pointer-events:all;}100%{opacity:0;pointer-events:none;visibility:hidden;}}
+#loader{position:fixed;inset:0;z-index:1000;background:var(--black);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:36px;}
 .ll-wrap{display:flex;gap:0;}
 .ll{font-size:clamp(56px,12vw,120px);font-weight:700;letter-spacing:-4px;transform:translateY(110%);display:inline-block;transition:transform .7s cubic-bezier(.16,1,.3,1);}
 .ll.in{transform:translateY(0);}
@@ -184,50 +183,15 @@ select option{background:#0a0a14;color:#fff;}
 .fb-btn:hover{background:rgba(10,132,255,.1);color:var(--white);border-color:rgba(10,132,255,.3);}
 
 /* FEEDBACK -- style 3, option 2 typography */
-.fb-list{display:flex;flex-direction:column;gap:24px;}
-.fb-section-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.fb-section-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);}
-.fb-section-pill{font-size:10px;font-weight:600;padding:2px 9px;border-radius:99px;}
-.fb-pill-high{background:rgba(255,69,58,.15);color:#ff453a;}
-.fb-pill-med{background:rgba(255,159,10,.15);color:#ff9f0a;}
-.fb-pill-low{background:rgba(48,209,88,.15);color:#30d158;}
-.fb-rows{display:flex;flex-direction:column;gap:6px;}
-.fb-row{border-radius:10px;overflow:hidden;border:.5px solid rgba(255,255,255,.07);}
-.fb-row-main{display:grid;grid-template-columns:1fr 1fr;gap:0;}
-.fb-row-problem{background:rgba(255,255,255,.03);padding:13px 16px;border-right:.5px solid rgba(255,255,255,.07);}
-.fb-row-fix{background:rgba(10,132,255,.05);padding:13px 16px;}
-.fb-col-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px;}
-.fb-col-label.problem{color:rgba(255,255,255,.35);}
-.fb-col-label.fix{color:rgba(10,132,255,.7);}
-.fb-col-text{font-size:13px;line-height:1.55;}
-.fb-col-text.problem{color:rgba(255,255,255,.7);}
-.fb-col-text.fix{color:rgba(255,255,255,.92);font-weight:500;}
-.fb-row-why{display:none;padding:10px 16px;background:rgba(255,255,255,.02);border-top:.5px solid rgba(255,255,255,.05);}
-.fb-row-why.open{display:block;}
-.fb-why-text{font-size:12px;color:rgba(255,255,255,.5);line-height:1.6;}
-.fb-why-toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#0a84ff;cursor:pointer;padding:8px 16px;background:none;border:none;font-family:inherit;width:100%;text-align:left;border-top:.5px solid rgba(255,255,255,.08);}
-.fb-why-toggle:hover{color:#fff;}
-.fb-why-arrow{font-size:9px;transition:transform .2s;}
-.fb-why-arrow.open{transform:rotate(90deg);}
-.optional-toggle{display:flex;align-items:center;gap:8px;cursor:none;margin-top:14px;background:none;border:none;font-family:inherit;padding:0;width:100%;}
-.optional-toggle-label{font-size:13px;color:rgba(255,255,255,.5);font-weight:500;}
-.optional-toggle-arrow{font-size:11px;color:rgba(255,255,255,.35);transition:transform .2s;}
-.optional-toggle-arrow.open{transform:rotate(90deg);}
-.optional-line{flex:1;height:.5px;background:rgba(255,255,255,.08);}
-.optional-fields{display:none;margin-top:12px;display:flex;flex-direction:column;gap:10px;}
-.optional-fields.show{display:flex;}
-.optional-fields input{width:100%;background:rgba(255,255,255,.04);border:.5px solid rgba(255,255,255,.1);border-radius:12px;color:var(--white);font-family:inherit;font-size:14px;padding:14px 16px;outline:none;margin-top:0;}
-.optional-fields input:focus{border-color:rgba(10,132,255,.5);}
-.optional-fields input::placeholder{color:var(--dim);}
-.optional-tag{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:4px;}
-
-
-
-
-
-
-
-
+.fb-list{display:flex;flex-direction:column;gap:10px;}
+.fb-item{display:flex;align-items:flex-start;gap:16px;background:rgba(255,255,255,.03);border:.5px solid rgba(255,255,255,.08);border-radius:12px;padding:20px 22px;}
+.fb-item-num{font-size:26px;font-weight:700;color:rgba(10,132,255,.25);letter-spacing:-1px;line-height:1;flex-shrink:0;width:36px;margin-top:2px;}
+.fb-item-body{}
+.fb-item-title{font-size:16px;font-weight:600;color:rgba(255,255,255,.92);margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;letter-spacing:-.2px;}
+.fb-item-desc{font-size:14px;color:rgba(255,255,255,.85);line-height:1.7;}
+.fb-bullet-list{display:flex;flex-direction:column;gap:9px;margin-top:2px;}
+.fb-bullet-row{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:rgba(255,255,255,.85);line-height:1.55;}
+.fb-bullet-dot{width:5px;height:5px;border-radius:50%;background:#0a84ff;flex-shrink:0;margin-top:7px;}
 .fb-pill{display:inline-block;font-size:11px;font-weight:600;border-radius:99px;padding:3px 11px;vertical-align:middle;}
 .fb-pill-high{background:rgba(255,69,58,.15);color:#ff453a;}
 .fb-pill-med{background:rgba(255,159,10,.15);color:#ff9f0a;}
@@ -404,11 +368,11 @@ footer{border-top:.5px solid var(--border);padding:40px 48px;display:flex;justif
   .sub-btn{font-size:15px;padding:15px;}
 
   /* FEEDBACK CARDS */
-
-
-
-
-
+  .fb-item{padding:14px 14px;gap:12px;}
+  .fb-item-num{font-size:20px;width:26px;}
+  .fb-item-title{font-size:15px;}
+  .fb-item-desc{font-size:14px;}
+  .fb-bullet-row{font-size:14px;}
   .fb-pill{font-size:10px;padding:2px 8px;}
 
   /* CHAT */
@@ -582,7 +546,7 @@ footer{border-top:.5px solid var(--border);padding:40px 48px;display:flex;justif
         <h4>Drop your bounce here</h4>
         <p>MP3, WAV, AIFF -- describe what's bothering you below</p>
       </div>
-      <input type="file" id="ainput" accept="audio/*,.mp3,.wav,.aiff,.aif,.m4a,.mp4,.ogg,.flac" onchange="handleAudio(this)">
+      <input type="file" id="ainput" accept="audio/*" onchange="handleAudio(this)">
       <div class="fchip" id="achip">🎵 <span id="aname"></span></div>
       <div class="analysis-card" id="analysis-card">
         <div class="analysis-title">
@@ -646,23 +610,6 @@ footer{border-top:.5px solid var(--border);padding:40px 48px;display:flex;justif
         <select id="tgenre"><option value="trap">Trap</option><option value="drill">Drill</option><option value="boom bap">Boom bap</option><option value="melodic rap">Melodic rap</option><option value="pluggnb">Pluggnb</option><option value="jersey club">Jersey club</option><option value="other rap">Other</option></select>
         <select id="tstage"><option value="rough mix">Rough mix</option><option value="almost done">Almost done</option><option value="final check">Final check</option></select>
       </div>
-
-      <button class="optional-toggle" onclick="toggleOptional()" type="button">
-        <span class="optional-toggle-arrow" id="opt-arrow">▶</span>
-        <span class="optional-toggle-label">Add more context (optional — helps Marcus give better advice)</span>
-        <span class="optional-line"></span>
-      </button>
-      <div class="optional-fields" id="opt-fields">
-        <div>
-          <div class="optional-tag">Reference artists</div>
-          <input type="text" id="t-refs" placeholder="e.g. Drake, Travis Scott, Gunna — artists you want to sound like">
-        </div>
-        <div>
-          <div class="optional-tag">Available plugins</div>
-          <input type="text" id="t-plugins" placeholder="e.g. Logic stock plugins, FabFilter Pro-Q3, Waves SSL, OTT">
-        </div>
-      </div>
-
       <button class="sub-btn" id="btn-track" onclick="getFeedback('track')">Analyze mix</button>
       <div class="fb-out" id="fb-track">
         <div class="fb-label"><div class="fb-dot"></div>Engineer feedback</div>
@@ -694,7 +641,7 @@ footer{border-top:.5px solid var(--border);padding:40px 48px;display:flex;justif
       <div class="upload-zone" onclick="document.getElementById('iinput').click()">
         <span class="uico">📸</span>
         <h4>Screenshot your plugin chain</h4>
-        <p>Up to 8 screenshots — one per plugin window or your full chain</p>
+        <p>Add multiple screenshots -- one per plugin window, or your full chain</p>
       </div>
       <input type="file" id="iinput" accept="image/*" multiple onchange="handleImages(this)">
       <div id="imgpreviews" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;"></div>
@@ -771,7 +718,7 @@ footer{border-top:.5px solid var(--border);padding:40px 48px;display:flex;justif
         <h4>Upload reference track</h4>
         <p>The song you want to sound like -- MP3, WAV, AIFF</p>
       </div>
-      <input type="file" id="refinput" accept="audio/*,.mp3,.wav,.aiff,.aif,.m4a,.mp4,.ogg,.flac" onchange="handleRefAudio(this)">
+      <input type="file" id="refinput" accept="audio/*" onchange="handleRefAudio(this)">
       <div class="fchip" id="refchip">🎵 <span id="refname"></span></div>
 
       <div style="margin-top:16px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:10px;">Optionally add your plugin screenshots</div>
@@ -826,14 +773,14 @@ footer{border-top:.5px solid var(--border);padding:40px 48px;display:flex;justif
         <h4>Upload your bounce</h4>
         <p>Your rough mix or final -- MP3, WAV, AIFF</p>
       </div>
-      <input type="file" id="fullaudio" accept="audio/*,.mp3,.wav,.aiff,.aif,.m4a,.mp4,.ogg,.flac" onchange="handleFullAudio(this)">
+      <input type="file" id="fullaudio" accept="audio/*" onchange="handleFullAudio(this)">
       <div class="fchip" id="fullchip">🎵 <span id="fullname"></span></div>
 
       <div style="margin-top:16px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:10px;">Plugin chain screenshots</div>
       <div class="upload-zone" style="padding:24px;" onclick="document.getElementById('fullimgs').click()">
         <span class="uico" style="font-size:24px;">📸</span>
         <h4 style="font-size:14px;">Add your plugin screenshots</h4>
-        <p>Up to 6 screenshots — vocal chain, 808, master bus etc.</p>
+        <p>Add as many as you need -- vocal chain, 808, master bus etc.</p>
       </div>
       <input type="file" id="fullimgs" accept="image/*" multiple onchange="handleFullImages(this)">
       <div id="fullimgpreviews" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;"></div>
@@ -952,22 +899,18 @@ const lbar = document.getElementById('lbar');
 const lls = [0,1,2,3,4,5,6,7,8].map(i => document.getElementById('l'+i));
 if(lls[0]) lls.forEach((l,i) => setTimeout(() => { if(l) l.classList.add('in'); }, 60 + i*55));
 const li = setInterval(() => {
-  prog += 8;
-  if(prog >= 100){ prog=100; clearInterval(li); }
-  if(lbar) lbar.style.width = prog+'%';
+  prog += Math.random()*7+2;
+  if(prog >= 100){ prog=100; clearInterval(li); setTimeout(finishLoad, 400); }
+  lbar.style.width = prog+'%';
 }, 80);
-// Always finish after 1 second — no exceptions
-setTimeout(finishLoad, 1000);
+// Hard timeout -- force finish after 3s no matter what
+setTimeout(() => { if(document.getElementById('loader').style.display !== 'none') finishLoad(); }, 3000);
 function finishLoad(){
   const ld = document.getElementById('loader');
   if(!ld || ld.style.display === 'none') return;
-  ld.style.transition = 'opacity .4s';
-  ld.style.opacity = '0';
-  setTimeout(() => { 
-    ld.style.display='none'; 
-    document.body.style.overflow='auto';
-    startHero(); 
-  }, 420);
+  ld.style.transition = 'opacity .6s, transform .6s';
+  ld.style.opacity = '0'; ld.style.transform = 'translateY(-16px)';
+  setTimeout(() => { ld.style.display='none'; startHero(); }, 650);
 }
 function startHero(){
   setTimeout(() => document.getElementById('heyebrow').classList.add('in'), 100);
@@ -1045,23 +988,11 @@ if(stmtSec) window.addEventListener('scroll', () => {
 
 // -- APP LOGIC --
 // -- PASTE YOUR ANTHROPIC API KEY HERE --
+const ANTHROPIC_API_KEY = 'YOUR-API-KEY-HERE';
 // ----------------------------------------
 
 let imageB64=null, imageType=null, currentFb={};
 let sessions = JSON.parse(localStorage.getItem('bm_sessions')||'[]');
-
-function toggleOptional(){
-  const fields = document.getElementById('opt-fields');
-  const arrow = document.getElementById('opt-arrow');
-  const isOpen = fields.classList.contains('show');
-  if(isOpen){
-    fields.classList.remove('show');
-    arrow.classList.remove('open');
-  } else {
-    fields.classList.add('show');
-    arrow.classList.add('open');
-  }
-}
 
 function switchTab(name, btn){
   document.querySelectorAll('.tb').forEach(b=>b.classList.remove('active'));
@@ -1090,145 +1021,247 @@ async function analyzeAudio(file){
   results.style.display='none';
   status.textContent='';
 
-  let progressWrap = document.getElementById('analysis-progress-wrap');
+  // ── PROGRESS BAR ──
   let progressBar = document.getElementById('analysis-progress-bar');
+  let progressWrap = document.getElementById('analysis-progress-wrap');
   let progressPct = document.getElementById('analysis-progress-pct');
-  if(!progressWrap){
+  if(!progressBar){
     progressWrap = document.createElement('div');
     progressWrap.id='analysis-progress-wrap';
     progressWrap.style.cssText='margin-top:12px;';
-    const track = document.createElement('div');
-    track.style.cssText='height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;';
+    const barTrack = document.createElement('div');
+    barTrack.style.cssText='height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;';
     progressBar = document.createElement('div');
     progressBar.id='analysis-progress-bar';
-    progressBar.style.cssText='height:3px;background:var(--accent);border-radius:2px;width:0%;transition:width .4s ease;';
+    progressBar.style.cssText='height:3px;background:var(--accent);border-radius:2px;width:0%;transition:width .3s ease;box-shadow:0 0 8px rgba(10,132,255,.5);';
+    barTrack.appendChild(progressBar);
     progressPct = document.createElement('div');
     progressPct.id='analysis-progress-pct';
-    progressPct.style.cssText='font-size:11px;color:var(--dim);margin-top:5px;';
-    track.appendChild(progressBar);
-    progressWrap.appendChild(track);
+    progressPct.style.cssText='font-size:11px;color:var(--dim);margin-top:6px;';
+    progressWrap.appendChild(barTrack);
     progressWrap.appendChild(progressPct);
     scanning.appendChild(progressWrap);
   }
-  progressWrap.style.display='block';
 
-  function setP(pct, lbl){ if(progressBar) progressBar.style.width=pct+'%'; if(progressPct) progressPct.textContent=pct+'% -- '+lbl; }
+  function setProgress(pct, label){
+    progressBar.style.width = pct+'%';
+    progressPct.textContent = pct+'% — '+label;
+  }
 
-  function setMetric(id, value, sub, barPct, rating){
-    const v=document.getElementById('am-'+id); if(v) v.textContent=value;
-    const s=document.getElementById('am-'+id+'-sub'); if(s) s.textContent=sub;
-    const b=document.getElementById('am-'+id+'-bar');
-    if(b){b.style.width=Math.min(100,barPct)+'%';b.className='am-bar '+(rating==='good'?'good':rating==='warn'?'warn':'bad');}
-    const f=document.getElementById('am-'+id+'-flag');
-    if(f){const labels={good:'good',warn:'needs work',bad:'problem'};f.innerHTML='<span class="am-flag am-flag--'+rating+'">'+labels[rating]+'</span>';}
+  function updateMetricSilently(id, value, sub, barPct, rating){
+    const valEl = document.getElementById('am-'+id);
+    const subEl = document.getElementById('am-'+id+'-sub');
+    const bar = document.getElementById('am-'+id+'-bar');
+    const flagEl = document.getElementById('am-'+id+'-flag');
+    if(valEl) valEl.textContent = value;
+    if(subEl) subEl.textContent = sub;
+    if(bar){ bar.style.width=Math.min(100,barPct)+'%'; bar.className='am-bar '+(rating==='good'?'good':rating==='warn'?'warn':'bad'); }
+    if(flagEl){ const labels={good:'✓ good',warn:'needs work',bad:'problem'}; flagEl.innerHTML='<span class="am-flag '+rating+'">'+labels[rating]+'</span>'; }
   }
 
   try {
-    setP(10,'loading audio...');
+    setProgress(5, 'loading audio...');
     const arrayBuffer = await file.arrayBuffer();
-    setP(20,'decoding...');
-    const AC = window.AudioContext||window.webkitAudioContext;
-    const ctx = new AC();
-    const audioBuf = await ctx.decodeAudioData(arrayBuffer);
-    const left = audioBuf.getChannelData(0);
-    const right = audioBuf.numberOfChannels>1?audioBuf.getChannelData(1):left;
-    const sr = audioBuf.sampleRate;
-    const duration = audioBuf.duration;
 
-    // Use first 10 seconds only for speed
-    const SECS = Math.min(duration, 10);
-    const len = Math.floor(sr * SECS);
-    const mono = new Float32Array(len);
-    for(let i=0;i<len;i++) mono[i]=(left[i]+right[i])/2;
+    setProgress(15, 'decoding track...');
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioContext();
+    const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
 
-    // Reliable band energy via OfflineAudioContext
-    async function bandE(sig, sr, lo, hi){
-      const n=sig.length;
-      const oc=new OfflineAudioContext(1,n,sr);
-      const os=oc.createBufferSource();
-      const ob=oc.createBuffer(1,n,sr);
-      ob.copyToChannel(sig,0);
-      os.buffer=ob;
-      const flt=oc.createBiquadFilter();
-      flt.type='bandpass';
-      flt.frequency.value=(lo+hi)/2;
-      flt.Q.value=Math.max(0.5,(lo+hi)/(2*(hi-lo)));
-      os.connect(flt);flt.connect(oc.destination);os.start(0);
-      const r=await oc.startRendering();
-      const d=r.getChannelData(0);
-      let s=0;for(let i=0;i<d.length;i++)s+=d[i]*d[i];
-      return Math.sqrt(s/d.length);
+    const left = audioBuffer.getChannelData(0);
+    const right = audioBuffer.numberOfChannels > 1 ? audioBuffer.getChannelData(1) : left;
+    const sr = audioBuffer.sampleRate;
+    const duration = audioBuffer.duration;
+
+    // Mix to mono
+    const mono = new Float32Array(left.length);
+    for(let i=0;i<left.length;i++) mono[i]=(left[i]+right[i])/2;
+
+    // ── PHASE 1: Fast analysis on first 30 seconds ──
+    const FAST_SECS = 30;
+    const fastLen = Math.min(mono.length, sr * FAST_SECS);
+    const fullLen = mono.length;
+
+    async function getBandEnergy(signal, sampleRate, lowHz, highHz, maxSecs){
+      const len = Math.min(signal.length, sampleRate * (maxSecs || 30));
+      const oCtx = new OfflineAudioContext(1, len, sampleRate);
+      const oSrc = oCtx.createBufferSource();
+      const oBuf = oCtx.createBuffer(1, len, sampleRate);
+      oBuf.copyToChannel(signal.subarray(0, len), 0);
+      oSrc.buffer = oBuf;
+      const filter = oCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = (lowHz + highHz) / 2;
+      filter.Q.value = Math.max(0.1, (lowHz + highHz) / (2 * (highHz - lowHz)));
+      oSrc.connect(filter);
+      filter.connect(oCtx.destination);
+      oSrc.start(0);
+      const rendered = await oCtx.startRendering();
+      const data = rendered.getChannelData(0);
+      let sum = 0;
+      for(let i=0;i<data.length;i++) sum += data[i]*data[i];
+      return Math.sqrt(sum/data.length);
     }
 
-    setP(30,'sub bass...');   const subBass  = await bandE(mono,sr,20,80);
-    setP(40,'bass...');       const bass     = await bandE(mono,sr,80,250);
-    setP(50,'low mids...');   const lowMid   = await bandE(mono,sr,250,500);
-    setP(60,'mids...');       const mid      = await bandE(mono,sr,500,2000);
-    setP(70,'upper mids...'); const upperMid = await bandE(mono,sr,2000,6000);
-    setP(78,'presence...');   const presence = await bandE(mono,sr,3000,8000);
-    setP(85,'air...');        const air      = await bandE(mono,sr,8000,20000);
-    setP(90,'dynamics...');
-
-    // Stereo + dynamics
-    let midRMS=0,sideRMS=0,oRMS=0,peak=0;
-    for(let i=0;i<len;i++){
-      const m=(left[i]+right[i])/2,s=(left[i]-right[i])/2;
-      midRMS+=m*m;sideRMS+=s*s;oRMS+=m*m;
-      if(Math.abs(m)>peak)peak=Math.abs(m);
+    function calcStereoAndDynamics(l, r, len){
+      let midRMS=0, sideRMS=0, overallRMS=0, peak=0;
+      const n = Math.min(l.length, len);
+      for(let i=0;i<n;i++){
+        const m=(l[i]+r[i])/2, s=(l[i]-r[i])/2, mo=(l[i]+r[i])/2;
+        midRMS+=m*m; sideRMS+=s*s; overallRMS+=mo*mo;
+        if(Math.abs(mo)>peak) peak=Math.abs(mo);
+      }
+      midRMS=Math.sqrt(midRMS/n); sideRMS=Math.sqrt(sideRMS/n); overallRMS=Math.sqrt(overallRMS/n);
+      const stereoWidth = midRMS>0 ? sideRMS/midRMS : 0;
+      const lufsApprox = 20*Math.log10(overallRMS+0.00001);
+      const crestFactor = peak>0 ? 20*Math.log10(peak/overallRMS) : 0;
+      return {stereoWidth, lufsApprox, crestFactor, overallRMS};
     }
-    midRMS=Math.sqrt(midRMS/len);sideRMS=Math.sqrt(sideRMS/len);oRMS=Math.sqrt(oRMS/len);
-    const sw=midRMS>0?sideRMS/midRMS:0;
-    const lufs=20*Math.log10(oRMS+0.00001);
-    const crest=peak>0?20*Math.log10(peak/oRMS):0;
-    const lowE=subBass+bass, vocE=mid+upperMid;
-    const lvr=vocE>0?lowE/vocE:0;
-    const cent=(subBass*50+bass*165+lowMid*375+mid*1250+upperMid*4000+air*14000)/(subBass+bass+lowMid+mid+upperMid+air+0.0001);
-    const vs=vocE/(oRMS+0.0001);
 
-    audioAnalysisData={subBass:subBass.toFixed(4),bass:bass.toFixed(4),lowMid:lowMid.toFixed(4),mid:mid.toFixed(4),upperMid:upperMid.toFixed(4),presence:presence.toFixed(4),air:air.toFixed(4),stereoWidth:sw.toFixed(3),lufsApprox:lufs.toFixed(1),crestFactor:crest.toFixed(1),spectralCentroid:Math.round(cent),lowVocalRatio:lvr.toFixed(2),duration:Math.round(duration)};
+    function buildResults(bands, stereoData){
+      const [subBass, bass, lowMid, mid, upperMid, presence, air] = bands;
+      const {stereoWidth, lufsApprox, crestFactor, overallRMS} = stereoData;
+      const lowEndEnergy = subBass+bass;
+      const vocalEnergy = mid+upperMid;
+      const lowVocalRatio = vocalEnergy>0 ? lowEndEnergy/vocalEnergy : 0;
+      const spectralCentroid = (subBass*50+bass*165+lowMid*375+mid*1250+upperMid*4000+air*14000)/(subBass+bass+lowMid+mid+upperMid+air+0.0001);
+      const vocalScore = vocalEnergy/(overallRMS+0.0001);
+      return {subBass,bass,lowMid,mid,upperMid,presence,air,stereoWidth,lufsApprox,crestFactor,overallRMS,lowEndEnergy,vocalEnergy,lowVocalRatio,spectralCentroid,vocalScore};
+    }
 
-    setP(95,'building results...');
+    function displayResults(d){
+      const {stereoWidth,lufsApprox,crestFactor,lowVocalRatio,spectralCentroid,vocalScore,duration:dur} = d;
+
+      const vocalRating = vocalScore>0.4?'good':vocalScore>0.25?'warn':'bad';
+      updateMetricSilently('vocal',(vocalScore*100).toFixed(0)+'%','of total energy in vocal range (500Hz-6kHz)',vocalScore*200,vocalRating);
+
+      const lowRating = lowVocalRatio<1.5?'good':lowVocalRatio<2.5?'warn':'bad';
+      updateMetricSilently('low',lowVocalRatio.toFixed(1)+'×','low end vs vocal energy (target: under 1.5×)',Math.min(100,lowVocalRatio*33),lowRating);
+
+      const stereoRating = stereoWidth>0.25?'good':stereoWidth>0.12?'warn':'bad';
+      updateMetricSilently('stereo',stereoWidth.toFixed(2),'side/mid ratio (target: 0.25+)',stereoWidth*300,stereoRating);
+
+      const brightRating = spectralCentroid>1500&&spectralCentroid<4000?'good':spectralCentroid<800?'bad':'warn';
+      const brightLabel = spectralCentroid<800?'dark/muddy':spectralCentroid<1500?'slightly dark':spectralCentroid<4000?'balanced':'bright/harsh';
+      updateMetricSilently('bright',Math.round(spectralCentroid)+'Hz','spectral centroid — '+brightLabel,Math.min(100,(spectralCentroid/8000)*100),brightRating);
+
+      const dynRating = crestFactor>8?'good':crestFactor>4?'warn':'bad';
+      const dynLabel = crestFactor>12?'wide — not much compression':crestFactor>8?'balanced':crestFactor>4?'compressed':'over-compressed';
+      updateMetricSilently('dynamic',crestFactor.toFixed(1)+'dB','crest factor — '+dynLabel,Math.min(100,(crestFactor/20)*100),dynRating);
+
+      const levelRating = lufsApprox>-16&&lufsApprox<-8?'good':lufsApprox<-20?'warn':'bad';
+      const levelLabel = lufsApprox>-8?'too hot — clipping risk':lufsApprox>-16?'good level':lufsApprox>-20?'a bit quiet':'too quiet';
+      updateMetricSilently('level',lufsApprox.toFixed(1)+' LUFS','~integrated loudness — '+levelLabel,Math.min(100,Math.max(0,((lufsApprox+30)/25)*100)),levelRating);
+
+      const insights=[];
+      if(lowVocalRatio>2) insights.push('<strong>Low end is dominating</strong> — '+lowVocalRatio.toFixed(1)+'× louder than vocals. Main reason vocals sound buried.');
+      if(stereoWidth<0.15) insights.push('<strong>Mix is very mono</strong> — width of '+stereoWidth.toFixed(2)+'. Widen pads and hi-hats to create space.');
+      if(spectralCentroid<800) insights.push('<strong>Mix is muddy/dark</strong> — centroid at '+Math.round(spectralCentroid)+'Hz. High-pass more aggressively and check reverb.');
+      if(crestFactor<4) insights.push('<strong>Over-compressed</strong> — '+crestFactor.toFixed(1)+'dB crest means transients are crushed. Back off compression.');
+      if(lufsApprox>-8) insights.push('<strong>Mix is too hot</strong> — '+lufsApprox.toFixed(1)+' LUFS will distort on streaming platforms.');
+      if(vocalScore<0.25) insights.push('<strong>Vocals are weak in the mix</strong> — only '+(vocalScore*100).toFixed(0)+'% of energy in vocal range.');
+      if(insights.length===0) insights.push('Measurements look reasonable. The AI will dig into specifics based on your description.');
+      document.getElementById('am-insight').innerHTML=insights.join('<br><br>');
+    }
+
+    // ── PHASE 1: analyze first 30s, show results fast ──
+    setProgress(20, 'quick scan (first 30s)...');
+    const fastBands = await Promise.all([
+      getBandEnergy(mono,sr,20,80,FAST_SECS),
+      getBandEnergy(mono,sr,80,250,FAST_SECS),
+      getBandEnergy(mono,sr,250,500,FAST_SECS),
+      getBandEnergy(mono,sr,500,2000,FAST_SECS),
+      getBandEnergy(mono,sr,2000,6000,FAST_SECS),
+      getBandEnergy(mono,sr,3000,8000,FAST_SECS),
+      getBandEnergy(mono,sr,8000,20000,FAST_SECS)
+    ]);
+    setProgress(55, 'calculating stereo & dynamics...');
+    const fastStereo = calcStereoAndDynamics(left, right, fastLen);
+    const fastResults = buildResults(fastBands, {...fastStereo, duration});
+
+    // Store fast results immediately
+    audioAnalysisData = {
+      subBass: fastResults.subBass.toFixed(4), bass: fastResults.bass.toFixed(4),
+      lowMid: fastResults.lowMid.toFixed(4), mid: fastResults.mid.toFixed(4),
+      upperMid: fastResults.upperMid.toFixed(4), presence: fastResults.presence.toFixed(4),
+      air: fastResults.air.toFixed(4), stereoWidth: fastResults.stereoWidth.toFixed(3),
+      lufsApprox: fastResults.lufsApprox.toFixed(1), crestFactor: fastResults.crestFactor.toFixed(1),
+      spectralCentroid: Math.round(fastResults.spectralCentroid),
+      lowVocalRatio: fastResults.lowVocalRatio.toFixed(2), duration: Math.round(duration)
+    };
+
+    // Show results immediately
+    setProgress(60, 'showing results...');
     scanning.style.display='none';
     results.style.display='block';
+    displayResults(fastResults);
+    progressWrap.style.display='block';
 
-    const vr=vs>0.4?'good':vs>0.25?'warn':'bad';
-    setMetric('vocal',(vs*100).toFixed(0)+'%','vocal range energy (500Hz-6kHz)',vs*200,vr);
-    const lr=lvr<1.5?'good':lvr<2.5?'warn':'bad';
-    setMetric('low',lvr.toFixed(1)+'x','low end vs vocal (target under 1.5x)',Math.min(100,lvr*33),lr);
-    const wr=sw>0.25?'good':sw>0.12?'warn':'bad';
-    setMetric('stereo',sw.toFixed(2),'side/mid ratio (target 0.25+)',sw*300,wr);
-    const brightLabel=cent<800?'dark/muddy':cent<1500?'slightly dark':cent<4000?'balanced':'bright/harsh';
-    const brightR=cent>1500&&cent<4000?'good':cent<800?'bad':'warn';
-    setMetric('bright',Math.round(cent)+'Hz','spectral centroid -- '+brightLabel,Math.min(100,(cent/8000)*100),brightR);
-    const dynLabel=crest>12?'wide':crest>8?'balanced':crest>4?'compressed':'over-compressed';
-    const dynR=crest>8?'good':crest>4?'warn':'bad';
-    setMetric('dynamic',crest.toFixed(1)+'dB','crest factor -- '+dynLabel,Math.min(100,(crest/20)*100),dynR);
-    const levelLabel=lufs>-8?'too hot':lufs>-16?'good level':lufs>-20?'a bit quiet':'too quiet';
-    const levelR=lufs>-16&&lufs<-8?'good':lufs<-20?'warn':'bad';
-    setMetric('level',lufs.toFixed(1)+' LUFS','integrated loudness -- '+levelLabel,Math.max(0,((lufs+30)/25)*100),levelR);
+    // ── PHASE 2: refine with full track in background ──
+    if(duration > FAST_SECS + 5){
+      const fullSecs = Math.min(duration, 60); // cap at 60s to prevent timeout
+      setProgress(65, 'refining with full track...');
 
-    const ins=[];
-    if(lvr>2) ins.push('<strong>Low end is '+lvr.toFixed(1)+'x louder than vocals</strong> -- main reason vocals sound buried.');
-    if(sw<0.15) ins.push('<strong>Mix is nearly mono</strong> -- width '+sw.toFixed(2)+', widen pads and hi-hats.');
-    if(cent<800) ins.push('<strong>Mix is dark/muddy</strong> -- centroid at '+Math.round(cent)+'Hz.');
-    if(crest<4) ins.push('<strong>Over-compressed</strong> -- '+crest.toFixed(1)+'dB crest factor.');
-    if(lufs>-8) ins.push('<strong>Too hot</strong> -- '+lufs.toFixed(1)+' LUFS will distort on streaming.');
-    if(vs<0.25) ins.push('<strong>Vocals weak in mix</strong> -- only '+(vs*100).toFixed(0)+'% energy in vocal range.');
-    if(ins.length===0) ins.push('Measurements look reasonable. Describe your issue and hit Analyze mix.');
-    document.getElementById('am-insight').innerHTML=ins.join('<br><br>');
+      // Yield to browser so UI can paint
+      await new Promise(r => setTimeout(r, 50));
 
-    setP(100,'done');
-    setTimeout(()=>{ if(progressWrap) progressWrap.style.display='none'; status.textContent='analyzed'; },1500);
+      // Wrap in timeout so it never hangs
+      const phase2Timeout = new Promise((_,reject) => setTimeout(()=>reject(new Error('phase2_timeout')), 15000));
+
+      const fullBands = await Promise.race([
+        Promise.all([
+          getBandEnergy(mono,sr,20,80,fullSecs),
+          getBandEnergy(mono,sr,80,250,fullSecs),
+          getBandEnergy(mono,sr,250,500,fullSecs),
+          getBandEnergy(mono,sr,500,2000,fullSecs),
+          getBandEnergy(mono,sr,2000,6000,fullSecs),
+          getBandEnergy(mono,sr,3000,8000,fullSecs),
+          getBandEnergy(mono,sr,8000,20000,fullSecs)
+        ]),
+        phase2Timeout
+      ]).catch(e => {
+        if(e.message === 'phase2_timeout'){
+          setProgress(100, 'analyzed ✓');
+          setTimeout(()=>{ progressWrap.style.display='none'; status.textContent='analyzed'; }, 1200);
+          return null;
+        }
+        throw e;
+      });
+      if(!fullBands) { await ctx.close(); return; }
+      setProgress(88, 'finalizing...');
+
+      await new Promise(r => setTimeout(r, 30));
+      const fullStereo = calcStereoAndDynamics(left, right, Math.min(fullLen, sr*fullSecs));
+      const fullResultsData = buildResults(fullBands, {...fullStereo, duration});
+
+      // Update stored data with full results
+      audioAnalysisData = {
+        subBass: fullResultsData.subBass.toFixed(4), bass: fullResultsData.bass.toFixed(4),
+        lowMid: fullResultsData.lowMid.toFixed(4), mid: fullResultsData.mid.toFixed(4),
+        upperMid: fullResultsData.upperMid.toFixed(4), presence: fullResultsData.presence.toFixed(4),
+        air: fullResultsData.air.toFixed(4), stereoWidth: fullResultsData.stereoWidth.toFixed(3),
+        lufsApprox: fullResultsData.lufsApprox.toFixed(1), crestFactor: fullResultsData.crestFactor.toFixed(1),
+        spectralCentroid: Math.round(fullResultsData.spectralCentroid),
+        lowVocalRatio: fullResultsData.lowVocalRatio.toFixed(2), duration: Math.round(duration)
+      };
+
+      // Update display with refined values
+      displayResults(fullResultsData);
+      setProgress(100, 'full track analyzed ✓');
+      setTimeout(()=>{ progressWrap.style.display='none'; status.textContent='full track analyzed'; }, 1500);
+    } else {
+      setProgress(100, 'analyzed ✓');
+      setTimeout(()=>{ progressWrap.style.display='none'; status.textContent='analyzed'; }, 1200);
+    }
+
     await ctx.close();
   } catch(err){
-    console.error('Analysis error:',err);
+    console.error('Analysis error:', err);
     scanning.style.display='none';
-    status.textContent='analysis failed -- describe your mix manually';
-    audioAnalysisData=null;
-    if(progressWrap) progressWrap.style.display='none';
+    status.textContent='analysis failed — describe your mix manually';
+    audioAnalysisData = null;
   }
 }
-
 
 // Multi-image storage for plugin chain
 let pluginImages=[]; // [{b64, type, name}]
@@ -1236,20 +1269,23 @@ let pluginImages=[]; // [{b64, type, name}]
 function handleImages(input){
   const files=Array.from(input.files); if(!files.length) return;
   const container=document.getElementById('imgpreviews');
-  const MAX_IMGS=8;
-  if(pluginImages.length>=MAX_IMGS){ alert('Maximum '+MAX_IMGS+' screenshots'); input.value=''; return; }
-  const toAdd=files.slice(0,MAX_IMGS-pluginImages.length);
-  toAdd.forEach(async file=>{
-    const compressed=await compressImage(file);
-    const idx=pluginImages.length;
-    pluginImages.push({b64:compressed.b64,type:compressed.type,name:file.name});
-    const wrap=document.createElement('div'); wrap.className='img-thumb-wrap'; wrap.id='thumb-'+idx;
-    const img=document.createElement('img'); img.className='img-thumb'; img.src=compressed.src;
-    const rm=document.createElement('button'); rm.className='img-thumb-remove'; rm.textContent='×';
-    rm.onclick=()=>{ pluginImages.splice(idx,1); document.getElementById('thumb-'+idx).remove(); updateImgCount(); };
-    wrap.appendChild(img); wrap.appendChild(rm); container.appendChild(wrap);
-    updateImgCount();
+  files.forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const b64=e.target.result.split(',')[1];
+      const idx=pluginImages.length;
+      pluginImages.push({b64,type:file.type,name:file.name});
+      // Thumbnail
+      const wrap=document.createElement('div'); wrap.className='img-thumb-wrap'; wrap.id='thumb-'+idx;
+      const img=document.createElement('img'); img.className='img-thumb'; img.src=e.target.result;
+      const rm=document.createElement('button'); rm.className='img-thumb-remove'; rm.textContent='×';
+      rm.onclick=()=>{ pluginImages.splice(idx,1); document.getElementById('thumb-'+idx).remove(); updateImgCount(); };
+      wrap.appendChild(img); wrap.appendChild(rm); container.appendChild(wrap);
+      updateImgCount();
+    };
+    reader.readAsDataURL(file);
   });
+  // Reset input so same files can be re-added if needed
   input.value='';
 }
 
@@ -1297,41 +1333,22 @@ function handleFullAudio(input){
   document.getElementById('fullchip').classList.add('show');
 }
 
-async function compressImage(file, maxWidth=1200, quality=0.75){
-  return new Promise(resolve=>{
-    const reader=new FileReader();
-    reader.onload=e=>{
-      const img=new Image();
-      img.onload=()=>{
-        const canvas=document.createElement('canvas');
-        let w=img.width, h=img.height;
-        if(w>maxWidth){ h=Math.round(h*(maxWidth/w)); w=maxWidth; }
-        canvas.width=w; canvas.height=h;
-        canvas.getContext('2d').drawImage(img,0,0,w,h);
-        const compressed=canvas.toDataURL('image/jpeg',quality);
-        resolve({b64:compressed.split(',')[1], type:'image/jpeg', src:compressed});
-      };
-      img.src=e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
 function handleFullImages(input){
   const files=Array.from(input.files); if(!files.length) return;
   const container=document.getElementById('fullimgpreviews');
-  const MAX_IMGS=6;
-  if(fullImages.length>=MAX_IMGS){ alert('Maximum '+MAX_IMGS+' screenshots'); input.value=''; return; }
-  const toAdd=files.slice(0, MAX_IMGS-fullImages.length);
-  toAdd.forEach(async file=>{
-    const compressed=await compressImage(file);
-    const idx=fullImages.length;
-    fullImages.push({b64:compressed.b64, type:compressed.type, name:file.name});
-    const wrap=document.createElement('div'); wrap.className='img-thumb-wrap'; wrap.id='fullthumb-'+idx;
-    const img=document.createElement('img'); img.className='img-thumb'; img.src=compressed.src;
-    const rm=document.createElement('button'); rm.className='img-thumb-remove'; rm.textContent='×';
-    rm.onclick=()=>{ fullImages.splice(idx,1); document.getElementById('fullthumb-'+idx).remove(); };
-    wrap.appendChild(img); wrap.appendChild(rm); container.appendChild(wrap);
+  files.forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const b64=e.target.result.split(',')[1];
+      const idx=fullImages.length;
+      fullImages.push({b64,type:file.type,name:file.name});
+      const wrap=document.createElement('div'); wrap.className='img-thumb-wrap'; wrap.id='fullthumb-'+idx;
+      const img=document.createElement('img'); img.className='img-thumb'; img.src=e.target.result;
+      const rm=document.createElement('button'); rm.className='img-thumb-remove'; rm.textContent='×';
+      rm.onclick=()=>{ fullImages.splice(idx,1); document.getElementById('fullthumb-'+idx).remove(); };
+      wrap.appendChild(img); wrap.appendChild(rm); container.appendChild(wrap);
+    };
+    reader.readAsDataURL(file);
   });
   input.value='';
 }
@@ -1344,17 +1361,13 @@ async function getFeedback(mode){
   fbBox.classList.add('vis');
   fbTxt.innerHTML='<div class="loading"><div class="spinner"></div>Analyzing...</div>';
 
-  const sys='\'You are Marcus, a professional mixing engineer with 15 years experience mixing rap across trap, drill, boom bap, melodic rap, pluggnb, and jersey club. You have mixed charting records. You think and talk like a real engineer in the studio, not a textbook. CORE PHILOSOPHY: The vocal is the star -- everything else exists to serve it. Always build the mix around the vocal. A mix is a three-dimensional image: Level controls height, EQ controls height detail, Panning controls width, Time-based effects control depth. Think in signal flow order always: gain staging, EQ, compression, saturation, time-based effects. Cutting frequencies is often more powerful than boosting -- it creates space without adding problems. Never judge an element in solo -- always listen in the context of the full mix. The bypass button is your best friend -- always reference before and after. A mix is a series of logic problems -- one change affects everything else. Listen carefully to the ripple effect. FREQUENCY KNOWLEDGE: Sub bass 20-80Hz: felt more than heard -- reserve exclusively for 808 and sub bass. High-pass everything else below 80Hz minimum. Bass 80-250Hz: fundamental weight of bass instruments -- too much = muddy and crowded. Low-mids 250-500Hz: muddiness and boxiness live here -- cut aggressively on pads, guitars, and keys that are support instruments. Mids 500Hz-2kHz: where vocals, 808 harmonics, snare body, and most instruments compete -- this is the most important battleground in a rap mix. High-mids 2k-8kHz: presence, snap, attack of drums, vocal intelligibility, sibilance, and harshness -- be careful here, a little goes a long way. Air 8kHz+: brightness and openness -- too much is fatiguing, too little sounds dull and amateur. The 400-800Hz range makes vocals sound like they are singing into a cheap microphone -- always check and cut this range on lead vocals. The 2-4kHz range can sound nasal on vocals -- cut with a narrow Q if the singer sounds like they are in their nose. KICK DRUM SPECIFIC KNOWLEDGE: Kick drum trouble spots: 200-500Hz sounds tubby, 600Hz-1kHz sounds boxy, 2-4kHz is the click and snap. Start every kick EQ by checking these three trouble spots before adding anything. High-pass the kick below 30Hz to remove sub rumble that eats headroom without adding punch. The click at 2-4kHz is what cuts through on small speakers and earbuds -- protect it. Compress the kick gently: 2:1 to 4:1 ratio, 8-12ms attack to let the transient through, 80-100ms release. LOW END RULES FOR RAP: The 808 and kick must not fight -- decide which instrument owns the sub. Usually the 808 owns 40-80Hz and the kick owns the 60-100Hz click region. Wrapping technique: find the fundamental of one instrument then notch that exact frequency out of the other. If kick peaks at 80Hz, cut 80Hz from the 808 and emphasize the 808 at 40Hz and 120Hz instead. High-pass everything except kick and 808 -- vocals at 80-100Hz, pads at 150-200Hz, hi-hats at 200Hz+, synths at 100-200Hz depending on register. Sidechain compress the 808 from the kick: 4:1 ratio, 5-10ms attack, 60-80ms release, aim for 4-6dB of gain reduction. This makes the kick and 808 breathe together instead of clashing. Too much 125-500Hz on any non-bass element = muddy mix. Cut this range on everything that does not need it. Check your low end in mono -- club systems are mono and low end phase cancellation will destroy your 808 when collapsed. VOCAL CHAIN FOR RAP IN EXACT ORDER: 1. High-pass filter at 80-100Hz at 18-24dB per octave -- removes sub rumble competing with 808 that the listener cannot even hear. 2. De-esser targeting 6-9kHz -- tame sibilance BEFORE the shaping EQ so you do not boost the problem frequencies. 3. Surgical EQ -- cut 400-800Hz narrow (Q 2.0+) to remove boxy cheap microphone sound. Cut 2-4kHz narrow if nasal. Boost nothing yet. 4. Limiter -- set to catch the hardest peaks at 2-3dB gain reduction. This prevents the compressor from working too hard on extreme notes. 5. Shaping EQ -- now boost 3-5kHz (+2 to +4dB, Q 1.2) for presence and cut-through in the mix. Boost 12-15kHz with a high shelf for air. 6. Compression -- 3:1 to 5:1 ratio, 8-15ms attack to preserve the consonants, 40-80ms release. Aim for 4-6dB of gain reduction. Two gentle compressors in series is always smoother than one heavy compressor. 7. Saturation -- light tape saturation adds harmonic warmth and glues the vocal into the mix. Keep it subtle, 10-20% drive. 8. Reverb -- use a plate or room reverb. Set pre-delay to 15-25ms so the dry vocal separates from the wet signal. Low-pass the WET signal at 4-5kHz to prevent bright sibilant reverb competing with the dry vocal. Keep wet at 15-25%. 9. Delay -- quarter-note or dotted-eighth synced to tempo. Set feedback to 1-2 repeats. DE-ESS THE DELAY SEND so hard consonants do not repeat. Keep delay at 10-20% wet. Bonus: add a chorus at 5-8% wet on the lead vocal for subtle movement that makes it interesting without sounding processed. COMPRESSION RULES: Low ratios 2:1 to 5:1 for leveling vocals and instruments. Fast attack kills transients and chokes the performance -- use 8-20ms attack to let the initial hit breathe. Too fast a release causes pumping. Match release roughly to the tempo of the song -- a good starting point is the length of one beat in ms. Parallel compression: blend a heavily compressed signal with the dry signal. This gives punch and consistency without destroying transients. Over-compressed vocals sound lifeless -- if you are using a ratio above 6:1 on a vocal, step back and use two 3:1 compressors in series instead. Gain reduction sweet spot for rap vocals: 4-6dB. More than 8dB and you are fighting the performance. DISTORTION AND SATURATION TYPES: Tube distortion: warm, punchy, emphasizes transients and low end harmonics -- use on kick drums, 808s, and bass for warmth. Tape distortion: bright, adds odd harmonics in the high mids -- use on vocals and drums for presence and excitement. Duplicate vocal trick: copy the lead vocal track, heavily distort the copy, blend it at low volume under the dry vocal in choruses -- adds harmonic excitement and pushes the vocal forward without obvious distortion. Light distortion at under 30% on almost any element adds harmonic content that makes it cut through without sounding distorted. STEREO AND PANNING RULES: Center: kick, 808, lead vocal, snare. These never move. Wide: hi-hats, pads, synths, background vocals, reverb returns, delay returns. Keep low end mono -- wide low end causes phase cancellation on mono systems and loses energy. Verse vs chorus technique: keep the stereo image narrower in verses and widen it in choruses. Introduce new panned elements in the chorus to create excitement and energy build. Two instruments in the same frequency range should be panned opposite each other to create separation. Check your mix in mono regularly -- if important elements disappear you have a phase problem. TIME-BASED EFFECTS RULES: Reverb creates depth -- front to back positioning in the mix. Dry sounds are closer, wet sounds are further away. Too much reverb drowns the mix -- when in doubt use less and increase the pre-delay instead. Roll off both HIGH and LOW frequencies of the reverb WET signal -- the mid-range reverb creates depth without adding mud or harshness. Use a mono reverb on lead vocal verses and a wider stereo reverb in choruses -- this creates movement with the song structure. Delay tip: set delay slightly off tempo by plus or minus 10ms for a push and pull feel that adds rhythmic interest. Never put reverb on the 808 sub frequencies -- it destroys the low end and makes the mix sound washy. SONG STRUCTURE MIXING: Verses: fewer elements, narrower stereo image, shorter reverb decays, less distortion. Choruses: more elements, wider stereo image, longer reverb decays, more saturation, introduce new panned instruments. Create forward motion -- the mix should breathe and build with the song. Automate reverb sends, widths, and volumes between sections to make the mix feel alive. RULES I NEVER BREAK: Always explain WHY before WHAT -- producers learn faster when they understand the mechanism. Never give vague advice -- always specific numbers: Hz, dB, ratios, ms, Q values, percentages. If the low end is the problem, check the 808 and kick relationship first -- it is almost always the root cause. If the vocal sounds buried, check the low end to vocal ratio first -- a dominant low end masks everything above it. Be direct and confident. Say do this not you might want to consider. FORMAT: Use ALL CAPS section headers followed by a colon. Under each section write bullet points each starting with - on its own separate line. Every bullet MUST follow this exact structure: [what is wrong or needs doing] -- [the specific fix with exact numbers, settings, or values]. The second part after -- must always be a concrete action or setting, never just an explanation of why something sounds a certain way. Examples of WRONG format: - Pitch correction is set to G# Ab major scale -- this should catch minor pitch issues. FORMAT FOR EACH BULLET: [what is wrong] -- [exact fix with specific numbers and settings] -- [one sentence explaining why]. The three parts are separated by \' -- \'. Part 1: the issue in plain language. Part 2: MUST be the specific actionable fix with exact numbers -- Hz, dB, ratio, ms, percentage. Never describe what something currently does -- tell them what to CHANGE it to. Part 3: one sentence explaining why this fix works. Example of CORRECT format: - Multiprocessor attack time at 2ms is choking transients -- change attack to 12-15ms to let the initial hit breathe -- fast attack kills the natural punch that gives vocals body and weight. Example of CORRECT format: - Antares Mic Mod tube saturation at 0 adds no warmth -- increase tube saturation to 40-60% for harmonic fullness -- tube saturation adds even harmonics that make vocals feel fuller and more present in the mix. Example of WRONG format: - Antares Mic Mod tube saturation at 0 -- this should add vintage character -- missing warmth. Never write flowing paragraphs. Never run bullets together. Include as many bullets as needed.';
+  const sys='You are an expert mixing engineer specializing in rap music. Format your response as sections with ALL CAPS headers followed by a colon (e.g. ROOT ISSUES:). Under each section write bullet points starting with a dash and a space (- ). Each bullet point must be on its own separate line. Never write paragraphs or run bullets together. You can include as many bullets as needed -- no limit. Include specific numbers (Hz, dB, ratios, ms) wherever relevant.';
   let messages=[];
 
   if(mode==='track'){
     const notes=document.getElementById('tnotes').value;
     const genre=document.getElementById('tgenre').value;
     const stage=document.getElementById('tstage').value;
-    const daw=document.getElementById('tdaw')?.value||'Logic Pro';
-    const refs=document.getElementById('t-refs')?.value||'';
-    const plugins=document.getElementById('t-plugins')?.value||'';
-    const contextStr=(refs?'\nReference artists (producer wants to sound like): '+refs:'')+(plugins?'\nAvailable plugins: '+plugins:'');
     // Build analysis data string if available
     const hasAnalysis = audioAnalysisData !== null;
     const analysisStr = hasAnalysis ? (
@@ -1375,7 +1388,7 @@ async function getFeedback(mode){
       '== USE THESE REAL NUMBERS in your analysis. Reference them specifically. Do not give generic advice when you have actual data. =='
     ) : '\n\n[No audio analysis data — user did not upload a track. Give advice based on description only.]';
 
-    messages=[{role:'user',content:'Genre: '+genre+'\nMix stage: '+stage+'\nDAW: '+daw+contextStr+'\nProducer notes: '+(notes||'No specific notes -- give a full diagnostic')+analysisStr+'\n\nAnalyze this mix using the real measurement data above. Reference the actual numbers when explaining problems. For each issue explain WHY it is happening. Give exact settings.\n\nROOT ISSUES:\n- What are the 3-5 core problems? Reference the actual measured values to explain why each problem is happening.\n\nVOCAL CHAIN:\n- Full vocal signal chain: gain staging, EQ with exact Hz and dB, compression with ratio/attack/release/threshold, saturation, time-based effects. Base recommendations on the actual frequency data.\n\nLOW END:\n- Sub, 808, kick, and bass relationships based on the measured energy values. Exact frequency ranges. Sidechain settings.\n\nSPACE AND WIDTH:\n- Based on the measured stereo width of '+( audioAnalysisData ? audioAnalysisData.stereoWidth : 'unknown' )+', give specific width recommendations. Reverb and delay settings.\n\nTOP 3 PRIORITIES:\n- The 3 highest impact fixes based on the actual data, in order.'}];
+    messages=[{role:'user',content:'Genre: '+genre+'\nMix stage: '+stage+'\nDAW: '+daw+'\nProducer notes: '+(notes||'No specific notes -- give a full diagnostic')+analysisStr+'\n\nAnalyze this mix using the real measurement data above. Reference the actual numbers when explaining problems. For each issue explain WHY it is happening. Give exact settings.\n\nROOT ISSUES:\n- What are the 3-5 core problems? Reference the actual measured values to explain why each problem is happening.\n\nVOCAL CHAIN:\n- Full vocal signal chain: gain staging, EQ with exact Hz and dB, compression with ratio/attack/release/threshold, saturation, time-based effects. Base recommendations on the actual frequency data.\n\nLOW END:\n- Sub, 808, kick, and bass relationships based on the measured energy values. Exact frequency ranges. Sidechain settings.\n\nSPACE AND WIDTH:\n- Based on the measured stereo width of '+( audioAnalysisData ? audioAnalysisData.stereoWidth : 'unknown' )+', give specific width recommendations. Reverb and delay settings.\n\nTOP 3 PRIORITIES:\n- The 3 highest impact fixes based on the actual data, in order.'}];
   } else if(mode==='plugin'){
     const notes=document.getElementById('pnotes').value;
     const chain=document.getElementById('pchain').value;
@@ -1425,28 +1438,16 @@ async function getFeedback(mode){
 
   try {
     const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),30000);
-    fbTxt.innerHTML='<div class="loading"><div class="spinner"></div>Connecting to engineer...</div>';
-    const res=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,system:sys,messages}),signal:controller.signal});
+    const timeout=setTimeout(()=>controller.abort(),45000);
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-version':'2023-06-01'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,system:sys,messages}),signal:controller.signal});
     clearTimeout(timeout);
-    if(!res.ok){
-      const errData=await res.json().catch(()=>({}));
-      fbTxt.textContent='API error '+res.status+': '+(errData.error?.message||errData.error||JSON.stringify(errData));
-      btn.disabled=false; return;
-    }
     const data=await res.json();
     const text=data.content?.map(b=>b.text||'').join('')||'No response received.';
     renderFeedback(text,fbTxt);
     currentFb[mode]=text;
     convHistory[mode].push({role:'assistant',content:text});
     document.getElementById('fu-'+mode).style.display='block';
-  } catch(err){
-    if(err.name==='AbortError'){
-      fbTxt.textContent='Request timed out after 30 seconds. Check your internet connection and try again.';
-    } else {
-      fbTxt.textContent='Error: '+err.message+'. Make sure the site is deployed correctly on Vercel.';
-    }
-  }
+  } catch(err){ fbTxt.textContent='Something went wrong. Check your connection and try again.'; }
   btn.disabled=false;
 }
 
@@ -1454,19 +1455,23 @@ function renderFeedback(raw,el){
   el.innerHTML='';
   const list=document.createElement('div'); list.className='fb-list';
 
+  // Parse into sections
   const sections=[];
   let cur=null;
   raw.split('\n').forEach(line=>{
     const t=line.trim();
     if(!t) return;
+    // Detect ALL CAPS header with colon e.g. "ROOT ISSUES:"
     const isHdr=/^[A-Z][A-Z\s&\/]{2,}:/.test(t)&&t.length<100;
     if(isHdr){
       if(cur) sections.push(cur);
       cur={title:t.replace(/:.*$/,'').trim(), bullets:[]};
     } else if(cur){
+      // Strip leading dash/hyphen/bullet
       const clean=t.replace(/^[-•*]\s*/,'').trim();
       if(clean) cur.bullets.push(clean);
     } else {
+      // Content before first header
       cur={title:null, bullets:[]};
       const clean=t.replace(/^[-•*]\s*/,'').trim();
       if(clean) cur.bullets.push(clean);
@@ -1478,88 +1483,41 @@ function renderFeedback(raw,el){
   const pillClass=['fb-pill-high','fb-pill-high','fb-pill-med','fb-pill-low','fb-pill-low'];
 
   sections.forEach((sec,idx)=>{
-    const block=document.createElement('div');
+    const item=document.createElement('div'); item.className='fb-item';
 
-    const hdr=document.createElement('div'); hdr.className='fb-section-header';
-    const hdrTitle=document.createElement('span'); hdrTitle.className='fb-section-title';
-    hdrTitle.textContent=sec.title||('Section '+(idx+1));
-    hdr.appendChild(hdrTitle);
+    // Number
+    const num=document.createElement('div'); num.className='fb-item-num';
+    num.textContent=String(idx+1).padStart(2,'0');
+
+    // Body
+    const body=document.createElement('div'); body.className='fb-item-body';
+
+    // Title + pill
+    const titleRow=document.createElement('div'); titleRow.className='fb-item-title';
+    const titleText=document.createElement('span');
+    titleText.textContent=sec.title||('Section '+(idx+1));
+    titleRow.appendChild(titleText);
     if(idx<priorities.length){
       const pill=document.createElement('span');
-      pill.className='fb-section-pill '+(pillClass[idx]||'fb-pill-low');
+      pill.className='fb-pill '+pillClass[idx];
       pill.textContent=priorities[idx];
-      hdr.appendChild(pill);
+      titleRow.appendChild(pill);
     }
-    block.appendChild(hdr);
+    body.appendChild(titleRow);
 
-    const rows=document.createElement('div'); rows.className='fb-rows';
-
+    // Bullets -- each on its own line with a dot
+    const bulletList=document.createElement('div'); bulletList.className='fb-bullet-list';
     sec.bullets.forEach(b=>{
-      const row=document.createElement('div'); row.className='fb-row';
-
-      // Parse: "issue -- fix -- why" or "issue -- fix"
-      // Format expected: [what's wrong] -- [exact fix with numbers] -- [why, optional]
-      let issue='', fix='', why='';
-      const parts=b.split(' -- ');
-      if(parts.length>=3){
-        issue=parts[0].trim();
-        fix=parts[1].trim();
-        why=parts.slice(2).join(' -- ').trim();
-      } else if(parts.length===2){
-        issue=parts[0].trim();
-        fix=parts[1].trim();
-      } else if(b.includes(': ')){
-        const colon=b.indexOf(': ');
-        issue=b.slice(0,colon).trim();
-        fix=b.slice(colon+2).trim();
-      } else {
-        issue=b; fix='';
-      }
-
-      // Main two-col row
-      const mainRow=document.createElement('div'); mainRow.className='fb-row-main';
-
-      const issueCell=document.createElement('div'); issueCell.className='fb-row-problem';
-      const issueLabel=document.createElement('div'); issueLabel.className='fb-col-label problem';
-      issueLabel.textContent='Issue';
-      const issueText=document.createElement('div'); issueText.className='fb-col-text problem';
-      issueText.textContent=issue;
-      issueCell.appendChild(issueLabel); issueCell.appendChild(issueText);
-
-      const fixCell=document.createElement('div'); fixCell.className='fb-row-fix';
-      const fixLabel=document.createElement('div'); fixLabel.className='fb-col-label fix';
-      fixLabel.textContent='Fix';
-      const fixText=document.createElement('div'); fixText.className='fb-col-text fix';
-      fixText.textContent=fix||'—';
-      fixCell.appendChild(fixLabel); fixCell.appendChild(fixText);
-
-      mainRow.appendChild(issueCell); mainRow.appendChild(fixCell);
-      row.appendChild(mainRow);
-
-      // Why toggle + expandable section (only if we have why text)
-      const whyContent = why || (fix && issue ? '' : '');
-      const toggle=document.createElement('button'); toggle.className='fb-why-toggle';
-      const arrow=document.createElement('span'); arrow.className='fb-why-arrow'; arrow.textContent='▶';
-      toggle.appendChild(arrow);
-      toggle.appendChild(document.createTextNode(' Why'));
-
-      const whyPanel=document.createElement('div'); whyPanel.className='fb-row-why';
-      const whyText=document.createElement('div'); whyText.className='fb-why-text';
-      whyText.textContent=why||'Tap to see explanation.';
-      whyPanel.appendChild(whyText);
-
-      toggle.onclick=()=>{
-        const open=whyPanel.classList.toggle('open');
-        arrow.classList.toggle('open',open);
-      };
-
-      row.appendChild(toggle);
-      row.appendChild(whyPanel);
-      rows.appendChild(row);
+      const row=document.createElement('div'); row.className='fb-bullet-row';
+      const dot=document.createElement('div'); dot.className='fb-bullet-dot';
+      const txt=document.createElement('span'); txt.textContent=b;
+      row.appendChild(dot); row.appendChild(txt);
+      bulletList.appendChild(row);
     });
+    body.appendChild(bulletList);
 
-    block.appendChild(rows);
-    list.appendChild(block);
+    item.appendChild(num); item.appendChild(body);
+    list.appendChild(item);
   });
   el.appendChild(list);
 }
@@ -1665,12 +1623,12 @@ async function sendFollowup(mode){
 
   convHistory[mode].push({role:'user',content:userContent});
 
-  const sys='You are Marcus, a professional rap mixing engineer. Answer this follow-up like you are both in the studio. Draw on real engineering knowledge: the 808/kick low end relationship, vocal chain order (HPF, de-esser, surgical EQ, limiter, shaping EQ, compression, saturation, reverb/delay), frequency ranges (sub 20-80Hz, bass 80-250Hz, low-mids 250-500Hz, mids 500Hz-2kHz, high-mids 2k-8kHz, air 8kHz+), compression parameters (ratio, attack, release, threshold), sidechain compression, parallel compression. NEVER write paragraphs. How-to questions: numbered steps 1. 2. 3. with reason for each. What/why questions: bullet points one line each. Always give exact numbers. Never say it depends without a starting point. Max 6 points.';
+  const sys='You are Marcus, a professional rap mixing engineer in the studio with this producer. Conversational but technical. NEVER write paragraphs. How-to questions: numbered steps 1. 2. 3. with a short reason under each. What/why questions: bullet points - one line each. Always give exact numbers -- Hz, dB, ratios, ms. Never say it depends without a specific starting point. Max 6 points. Talk like a real engineer.';
 
   try {
     const ctrl2=new AbortController();
     const t2=setTimeout(()=>ctrl2.abort(),30000);
-    const res=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:sys,messages:convHistory[mode]}),signal:ctrl2.signal});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-version':'2023-06-01'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:sys,messages:convHistory[mode]}),signal:ctrl2.signal});
     clearTimeout(t2);
     const data=await res.json();
     const text=data.content?.map(b=>b.text||'').join('')||'No response.';
